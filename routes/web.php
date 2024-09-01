@@ -3,10 +3,11 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\RujukanController;
 use App\Http\Controllers\PenggunaController;
 use App\Http\Controllers\PosyanduController;
-use App\Http\Controllers\IdentitasIbuController;
 use App\Http\Controllers\InformasiController;
+use App\Http\Controllers\IdentitasIbuController;
 use App\Http\Controllers\PernyataanPelayananController;
 
 /*
@@ -51,16 +52,20 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard/pelayanan_dokter', [AuthController::class, 'pelayananDokter'])->name('pelayanan_dokter');
     Route::get('/dashboard/pelayanan_kehamilan', [AuthController::class, 'pelayananKehamilan'])->name('pelayanan_kehamilan');
     Route::get('/dashboard/pelayanan_nifas', [AuthController::class, 'pelayananNifas'])->name('pelayanan_nifas');
-    Route::get('/dashboard/rujukan', [AuthController::class, 'rujukan'])->name('rujukan');
+    Route::get('/dashboard/rujukan', [RujukanController::class, 'index'])->name('rujukan');
 
     // Routes for INFORMASI IBU
     Route::get('/dashboard/ibu_hamil', [InformasiController::class, 'InformasiIbuHamil'])->name('ibu_hamil');
-    
-    Route::get('/dashboard/ibu_bersalin', [AuthController::class, 'ibuBersalin'])->name('ibu_bersalin');
-    Route::get('/dashboard/ibu_nifas', [AuthController::class, 'ibuNifas'])->name('ibu_nifas');
-    Route::get('/dashboard/ibu_menyusui', [AuthController::class, 'ibuMenyusui'])->name('ibu_menyusui');
-    Route::get('/dashboard/keluarga_berencana', [AuthController::class, 'keluargaBerencana'])->name('keluarga_berencana');
-    Route::get('/dashboard/kelas_ibu_hamil', [AuthController::class, 'kelasIbuHamil'])->name('kelas_ibu_hamil');
+
+    Route::get('/dashboard/ibu_bersalin', [InformasiController::class, 'InformasiIbuBersalin'])->name('ibu_bersalin');
+
+    Route::get('/dashboard/ibu_nifas', [InformasiController::class, 'ibuNifas'])->name('ibu_nifas');
+
+    Route::get('/dashboard/ibu_menyusui', [InformasiController::class, 'ibuMenyusui'])->name('ibu_menyusui');
+
+    Route::get('/dashboard/keluarga_berencana', [InformasiController::class, 'keluargaBerencana'])->name('keluarga_berencana');
+
+    Route::get('/dashboard/kelas_ibu_hamil', [InformasiController::class, 'kelasIbuHamil'])->name('kelas_ibu_hamil');
 
     // Routes for CATATAN ANAK
     Route::get('/dashboard/identitas_anak', [AuthController::class, 'identitasAnak'])->name('identitas_anak');

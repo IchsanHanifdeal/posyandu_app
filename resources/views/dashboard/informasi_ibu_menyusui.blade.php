@@ -1,4 +1,4 @@
-<x-dashboard.main title="Informasi Ibu Hamil">
+<x-dashboard.main title="Informasi Ibu Menyusui">
     @foreach (['Daftar_informasi_ibu_hamil'] as $item)
         <div class="flex flex-col border-back rounded-xl w-full">
             <div class="p-5 sm:p-7 bg-white rounded-t-xl">
@@ -24,39 +24,27 @@
                                 $informasiIbuHamil = [
                                     [
                                         'id' => 1,
-                                        'judul' => 'Periksa Kehamilan',
-                                        'gambar' => 'periksa_kehamilan.jpg',
-                                        'deskripsi' => 'Materi Periksa Kehamilan',
+                                        'judul' => 'Menyusui Bayi bermanfaat untuk pemulihan rahim, kesehatan payudara & ASI adalah gizi terbaik untuk bayi',
+                                        'gambar' => 'ibu_menyusui.jpg',
+                                        'deskripsi' => 'Menyusui Bayi bermanfaat untuk pemulihan rahim, kesehatan payudara & ASI adalah gizi terbaik untuk bayi',
                                     ],
                                     [
                                         'id' => 2,
-                                        'judul' => 'Perawatan dan hal yang harus dihindari ibu hamil',
-                                        'gambar' => 'pantangan.jpg',
-                                        'deskripsi' => 'Materi perawatan dan yang harus dihindari',
+                                        'judul' => 'Cara memerah dan menyimpan ASI',
+                                        'gambar' => 'cara_memerah.jpg',
+                                        'deskripsi' => 'Cara memerah dan menyimpan ASI',
                                     ],
                                     [
                                         'id' => 3,
-                                        'judul' => 'Porsi Makan dan Minum ibu hamil',
-                                        'gambar' => 'makanan.jpg',
-                                        'deskripsi' => 'Porsi Makan dan Minum ibu hamil',
+                                        'judul' => 'makan dan minum ibu menyusui',
+                                        'gambar' => 'makan.jpg',
+                                        'deskripsi' => 'makan dan minum ibu menyusui',
                                     ],
                                     [
                                         'id' => 4,
-                                        'judul' => 'Tanda Bahaya Ibu Hamil',
-                                        'gambar' => 'tanda_bahaya.jpg',
-                                        'deskripsi' => 'Tanda Bahaya Ibu Hamil',
-                                    ],
-                                    [
-                                        'id' => 5,
-                                        'judul' => 'Aktifitas dan Latihan ibu hamil',
-                                        'gambar' => 'aktifitas_dan_latihan.jpg',
-                                        'deskripsi' => 'Aktifitas dan Latihan ibu hamil',
-                                    ],
-                                    [
-                                        'id' => 6,
-                                        'judul' => 'Persiapan Melahirkan',
-                                        'gambar' => 'persiapan_melahirkan.jpg',
-                                        'deskripsi' => 'Persiapan Melahirkan',
+                                        'judul' => 'cara cuci tangan',
+                                        'gambar' => 'cuci_tangan.jpg',
+                                        'deskripsi' => 'cara cuci tangan',
                                     ],
                                 ];
                             @endphp
@@ -64,7 +52,7 @@
                             @foreach ($informasiIbuHamil as $info)
                                 <tr>
                                     <td class="text-center">{{ $info['id'] }}</td>
-                                    <td class="text-center font-semibold">{{ $info['judul'] }}</td>
+                                    <td class="text-center font-semibold capitalize">{{ $info['judul'] }}</td>
                                     <td class="text-center capitalize">
                                         <label for="lihat_modal_{{ $info['id'] }}"
                                             class="w-full btn btn-neutral flex items-center justify-center gap-2 text-white font-bold">
@@ -75,11 +63,11 @@
                                             class="modal-toggle" />
                                         <div class="modal" role="dialog">
                                             <div class="modal-box">
-                                                <h3 class="text-lg font-bold">{{ $info['deskripsi'] }}</h3>
+                                                <h3 class="text-lg font-bold capitalize">{{ $info['deskripsi'] }}</h3>
                                                 <div
                                                     class="flex flex-col w-full gap-3 !h-full mt-3 rounded-lg overflow-hidden">
                                                     <img id="foto_informasi_preview_{{ $info['id'] }}"
-                                                        src="{{ asset('images/informasi/ibu_hamil/' . $info['gambar']) }}"
+                                                        src="{{ asset('images/informasi/ibu_menyusui/' . $info['gambar']) }}"
                                                         class="border size-full" alt="Materi Gambar">
                                                 </div>
                                             </div>

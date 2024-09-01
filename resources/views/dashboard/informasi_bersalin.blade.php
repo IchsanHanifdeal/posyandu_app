@@ -1,4 +1,4 @@
-<x-dashboard.main title="Informasi Ibu Hamil">
+<x-dashboard.main title="Informasi Ibu Bersalin">
     @foreach (['Daftar_informasi_ibu_hamil'] as $item)
         <div class="flex flex-col border-back rounded-xl w-full">
             <div class="p-5 sm:p-7 bg-white rounded-t-xl">
@@ -24,39 +24,21 @@
                                 $informasiIbuHamil = [
                                     [
                                         'id' => 1,
-                                        'judul' => 'Periksa Kehamilan',
-                                        'gambar' => 'periksa_kehamilan.jpg',
-                                        'deskripsi' => 'Materi Periksa Kehamilan',
+                                        'judul' => 'Proses Melahirkan',
+                                        'gambar' => 'proses_melahirkan.jpg',
+                                        'deskripsi' => 'Proses Melahirkan',
                                     ],
                                     [
                                         'id' => 2,
-                                        'judul' => 'Perawatan dan hal yang harus dihindari ibu hamil',
-                                        'gambar' => 'pantangan.jpg',
-                                        'deskripsi' => 'Materi perawatan dan yang harus dihindari',
+                                        'judul' => 'Tanda Awal akan Melahirkan',
+                                        'gambar' => 'tanda_awal.jpg',
+                                        'deskripsi' => 'Tanda Awal akan Melahirkan',
                                     ],
                                     [
                                         'id' => 3,
-                                        'judul' => 'Porsi Makan dan Minum ibu hamil',
-                                        'gambar' => 'makanan.jpg',
-                                        'deskripsi' => 'Porsi Makan dan Minum ibu hamil',
-                                    ],
-                                    [
-                                        'id' => 4,
-                                        'judul' => 'Tanda Bahaya Ibu Hamil',
+                                        'judul' => 'Tanda Bahaya',
                                         'gambar' => 'tanda_bahaya.jpg',
-                                        'deskripsi' => 'Tanda Bahaya Ibu Hamil',
-                                    ],
-                                    [
-                                        'id' => 5,
-                                        'judul' => 'Aktifitas dan Latihan ibu hamil',
-                                        'gambar' => 'aktifitas_dan_latihan.jpg',
-                                        'deskripsi' => 'Aktifitas dan Latihan ibu hamil',
-                                    ],
-                                    [
-                                        'id' => 6,
-                                        'judul' => 'Persiapan Melahirkan',
-                                        'gambar' => 'persiapan_melahirkan.jpg',
-                                        'deskripsi' => 'Persiapan Melahirkan',
+                                        'deskripsi' => 'Tanda Bahaya',
                                     ],
                                 ];
                             @endphp
@@ -79,7 +61,7 @@
                                                 <div
                                                     class="flex flex-col w-full gap-3 !h-full mt-3 rounded-lg overflow-hidden">
                                                     <img id="foto_informasi_preview_{{ $info['id'] }}"
-                                                        src="{{ asset('images/informasi/ibu_hamil/' . $info['gambar']) }}"
+                                                        src="{{ asset('images/informasi/ibu_bersalin/' . $info['gambar']) }}"
                                                         class="border size-full" alt="Materi Gambar">
                                                 </div>
                                             </div>

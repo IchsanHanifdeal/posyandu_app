@@ -17,41 +17,41 @@ class InformasiController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function InformasiIbuBersalin()
     {
-        //
+        return view('dashboard.informasi_bersalin');
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function kelasIbuHamil(Request $request)
     {
-        //
+        return view('dashboard.kelas_ibu');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function keluargaBerencana()
     {
-        //
+        return view('dashboard.keluarga_berencana');
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function ibuNifas()
     {
-        //
+        return view('dashboard.informasi_ibu_nifas');
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function ibuMenyusui()
     {
-        //
+        return view('dashboard.informasi_ibu_menyusui');
     }
 
     /**
