@@ -2,27 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
+use App\Models\Ibu;
 use Illuminate\Http\Request;
 
-class PenggunaController extends Controller
+class IbuController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $pengguna = User::all();
-
-        $pengguna_terbaru = User::latest()->first()->nama;
-
-        $jumlah_pengguna = User::count();
-
-        return view('dashboard.pengguna', [
-            'pengguna' => $pengguna,
-            'pengguna_terbaru' => $pengguna_terbaru,
-            'jumlah_pengguna' => $jumlah_pengguna,
-        ]);
+        //
     }
 
     /**
@@ -44,7 +34,7 @@ class PenggunaController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Ibu $ibu)
     {
         //
     }
@@ -52,7 +42,7 @@ class PenggunaController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Ibu $ibu)
     {
         //
     }
@@ -60,7 +50,7 @@ class PenggunaController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Ibu $ibu)
     {
         //
     }
@@ -68,7 +58,7 @@ class PenggunaController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Ibu $ibu)
     {
         //
     }

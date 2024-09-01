@@ -1,4 +1,4 @@
-<x-dashboard.main title="Posyandu">
+<x-dashboard.main title="Data Posyandu">
     <div class="grid sm:grid-cols-2 xl:grid-cols-2 gap-5 md:gap-6">
         @foreach (['posyandu_terbaru', 'jumlah_posyandu'] as $type)
             <div class="flex items-center px-4 py-3 bg-neutral border rounded-xl shadow-sm">
@@ -20,7 +20,6 @@
             </div>
         @endforeach
     </div>
-
     <div class="flex flex-col lg:flex-row gap-5">
         @if (Auth::user()->role === 'super_admin')
             @foreach (['tambah_posyandu'] as $item)
@@ -41,7 +40,6 @@
             @endforeach
         @endif
     </div>
-
     <div class="flex gap-5">
         @foreach (['Daftar_posyandu'] as $item)
             <div class="flex flex-col border-back rounded-xl w-full">

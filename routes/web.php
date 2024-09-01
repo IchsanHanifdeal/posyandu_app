@@ -2,8 +2,12 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PenggunaController;
 use App\Http\Controllers\PosyanduController;
+use App\Http\Controllers\IdentitasIbuController;
+use App\Http\Controllers\InformasiController;
+use App\Http\Controllers\PernyataanPelayananController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,7 +23,7 @@ use App\Http\Controllers\PosyanduController;
 Route::get('/', [AuthController::class, 'index'])->name('login');
 Route::post('/auth', [AuthController::class, 'auth'])->name('auth.login');
 Route::get('/register', [AuthController::class, 'create'])->name('register');
-Route::post('/register/post', [AuthController::class, 'post'])->name('post.register');
+Route::post('/register/post', [AuthController::class, 'store'])->name('post.register');
 
 Route::middleware(['auth'])->group(function () {
     // Route for Dashboard
@@ -32,11 +36,17 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/dashboard/posyandu/post', [PosyanduController::class, 'store'])->name('store.posyandu');
     Route::put('/dashboard/posyandu/{id_posyandu}/update', [PosyanduController::class, 'update'])->name('update.posyandu');
     Route::delete('/dashboard/posyandu/{id_posyandu}/hapus', [PosyanduController::class, 'destroy'])->name('delete.posyandu');
+    
     Route::get('/dashboard/pengguna', [PenggunaController::class, 'index'])->name('pengguna');
+    Route::post('/dashboard/pengguna', [PenggunaController::class, 'store'])->name('store.pengguna');
+    Route::put('/dashboard/pengguna/{id_user}/update_photo', [PenggunaController::class, 'update_photo'])->name('photo.update');
+    Route::delete('/dashboard/pengguna/{id_user}/delete', [PenggunaController::class, 'destroy'])->name('delete.pengguna');
 
     // Routes for CATATAN IBU
-    Route::get('/dashboard/identitas_ibu_hamil', [AuthController::class, 'identitasIbuHamil'])->name('identitas_ibu_hamil');
-    Route::get('/dashboard/pernyataan_pelayanan', [AuthController::class, 'pernyataanPelayanan'])->name('pernyataan_pelayanan');
+    Route::get('/dashboard/identitas_ibu_hamil', [IdentitasIbuController::class, 'index'])->name('identitas_ibu_hamil');
+
+    Route::get('/dashboard/pernyataan_pelayanan', [PernyataanPelayananController::class, 'index'])->name('pernyataan_pelayanan');
+
     Route::get('/dashboard/amanat_persalinan', [AuthController::class, 'amanatPersalinan'])->name('amanat_persalinan');
     Route::get('/dashboard/pelayanan_dokter', [AuthController::class, 'pelayananDokter'])->name('pelayanan_dokter');
     Route::get('/dashboard/pelayanan_kehamilan', [AuthController::class, 'pelayananKehamilan'])->name('pelayanan_kehamilan');
@@ -44,7 +54,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard/rujukan', [AuthController::class, 'rujukan'])->name('rujukan');
 
     // Routes for INFORMASI IBU
-    Route::get('/dashboard/ibu_hamil', [AuthController::class, 'ibuHamil'])->name('ibu_hamil');
+    Route::get('/dashboard/ibu_hamil', [InformasiController::class, 'InformasiIbuHamil'])->name('ibu_hamil');
+    
     Route::get('/dashboard/ibu_bersalin', [AuthController::class, 'ibuBersalin'])->name('ibu_bersalin');
     Route::get('/dashboard/ibu_nifas', [AuthController::class, 'ibuNifas'])->name('ibu_nifas');
     Route::get('/dashboard/ibu_menyusui', [AuthController::class, 'ibuMenyusui'])->name('ibu_menyusui');
@@ -74,6 +85,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard/kelas_ibu_balita', [AuthController::class, 'kelasIbuBalita'])->name('kelas_ibu_balita');
 
     // Route for Profile
-    Route::get('/dashboard/profile', [AuthController::class, 'profile'])->name('profile');
+    Route::get('/dashboard/profile', [ProfileController::class, 'index'])->name('profile');
+    Route::put('/dashboard/profile/{id_user}/profile', [ProfileController::class, 'update'])->name('update.profile');
+    Route::put('/dashboard/profile/{id_user}/password', [ProfileController::class, 'password'])->name('change_password.profile');
+
     Route::post('/dashboard/logout', [AuthController::class, 'logout'])->name('logout');
 });

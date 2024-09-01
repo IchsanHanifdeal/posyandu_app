@@ -2,26 +2,24 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
+use App\Models\Ibu;
 use Illuminate\Http\Request;
 
-class PenggunaController extends Controller
+class IdentitasIbuController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $pengguna = User::all();
+        $ibu_terbaru = Ibu::latest()->first()->user->nama;
 
-        $pengguna_terbaru = User::latest()->first()->nama;
+        $jumlah_ibu = Ibu::count();
 
-        $jumlah_pengguna = User::count();
-
-        return view('dashboard.pengguna', [
-            'pengguna' => $pengguna,
-            'pengguna_terbaru' => $pengguna_terbaru,
-            'jumlah_pengguna' => $jumlah_pengguna,
+        return view('dashboard.identitas_ibu', [
+            'ibu' => Ibu::all(),
+            'jumlah_ibu' => $jumlah_ibu,
+            'ibu_terbaru' => $ibu_terbaru,
         ]);
     }
 

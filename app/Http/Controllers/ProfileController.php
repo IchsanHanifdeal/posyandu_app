@@ -2,26 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
 use Illuminate\Http\Request;
 
-class PenggunaController extends Controller
+class ProfileController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $pengguna = User::all();
-
-        $pengguna_terbaru = User::latest()->first()->nama;
-
-        $jumlah_pengguna = User::count();
-
-        return view('dashboard.pengguna', [
-            'pengguna' => $pengguna,
-            'pengguna_terbaru' => $pengguna_terbaru,
-            'jumlah_pengguna' => $jumlah_pengguna,
+        return view('dashboard.profile', [
+            'last_login' => $request->session()->get('login_time')
         ]);
     }
 
