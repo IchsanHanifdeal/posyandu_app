@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AmanatPersalinanController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProfileController;
@@ -27,8 +28,6 @@ Route::get('/register', [AuthController::class, 'create'])->name('register');
 Route::post('/register/post', [AuthController::class, 'store'])->name('post.register');
 
 Route::middleware(['auth'])->group(function () {
-    // Route for Dashboard
-    // Routes for GENERAL
     Route::get('/dashboard', function () {
         return view('dashboard.index');
     })->name('dashboard');
@@ -37,7 +36,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/dashboard/posyandu/post', [PosyanduController::class, 'store'])->name('store.posyandu');
     Route::put('/dashboard/posyandu/{id_posyandu}/update', [PosyanduController::class, 'update'])->name('update.posyandu');
     Route::delete('/dashboard/posyandu/{id_posyandu}/hapus', [PosyanduController::class, 'destroy'])->name('delete.posyandu');
-    
+
     Route::get('/dashboard/pengguna', [PenggunaController::class, 'index'])->name('pengguna');
     Route::post('/dashboard/pengguna', [PenggunaController::class, 'store'])->name('store.pengguna');
     Route::put('/dashboard/pengguna/{id_user}/update_photo', [PenggunaController::class, 'update_photo'])->name('photo.update');
@@ -48,7 +47,10 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/dashboard/pernyataan_pelayanan', [PernyataanPelayananController::class, 'index'])->name('pernyataan_pelayanan');
 
-    Route::get('/dashboard/amanat_persalinan', [AuthController::class, 'amanatPersalinan'])->name('amanat_persalinan');
+    Route::get('/dashboard/amanat_persalinan', [AmanatPersalinanController::class, 'index'])->name('amanat_persalinan');
+
+    Route::get('/maternity-plan/download', [AmanatPersalinanController::class, 'downloadPdf'])->name('print.amanat_persalinan');
+
     Route::get('/dashboard/pelayanan_dokter', [AuthController::class, 'pelayananDokter'])->name('pelayanan_dokter');
     Route::get('/dashboard/pelayanan_kehamilan', [AuthController::class, 'pelayananKehamilan'])->name('pelayanan_kehamilan');
     Route::get('/dashboard/pelayanan_nifas', [AuthController::class, 'pelayananNifas'])->name('pelayanan_nifas');

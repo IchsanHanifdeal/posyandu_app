@@ -12,7 +12,7 @@ class IdentitasIbuController extends Controller
      */
     public function index()
     {
-        $ibu_terbaru = Ibu::latest()->first()->user->nama;
+        $ibu_terbaru = Ibu::latest()->first()->user->nama ?? '-';
 
         $jumlah_ibu = Ibu::count();
 

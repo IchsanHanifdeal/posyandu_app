@@ -1,4 +1,4 @@
-    <?php
+<?php
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -11,16 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('rujukan', function (Blueprint $table) {
-            $table->id('id_rujukan');
+        Schema::create('riwayat_kehamilan', function (Blueprint $table) {
+            $table->id('id_riwayatkehamilan');
             $table->unsignedBigInteger('id_ibu');
             $table->foreign('id_ibu')->references('id_ibu')->on('ibu')->onDelete('cascade')->onUpdate('cascade');
-            $table->string('alasan');
-            $table->date('tanggal')->nullable();
-            $table->string('diagnosis_oleh')->nullable();
-            $table->string('resume')->nullable();
-            $table->string('anjuran')->nullable();
-            $table->enum('rekomendasi', ['FKTP', 'FKRTL'])->nullable();
+            $table->integer('tahun');
+            $table->integer('berat_lahir');
+            $table->string('persalinan')->default('-');
+            $table->string('penolong_persalinan')->default('-');
+            $table->string('komplikasi')->default('-');
             $table->timestamps();
         });
     }
@@ -30,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('rujukan');
+        Schema::dropIfExists('riwayat_kehamilan');
     }
 };

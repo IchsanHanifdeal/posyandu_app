@@ -42,7 +42,6 @@
                                         @endforeach
                                     </tr>
                                 </thead>
-                                <tbody>
                                 <tbody class="capitalize">
                                     @forelse ($ibu as $i => $item)
                                         <th class="text-center">{{ $i + 1 }}</th>
@@ -95,7 +94,7 @@
                                                     const userId = "{{ $item->id_user }}";
                                                     const fotoInput = document.getElementById('foto_profil_file_' + userId);
                                                     const previewImage = document.getElementById('foto_profil_preview_' + userId);
-    
+
                                                     fotoInput.addEventListener('change', function() {
                                                         const file = this.files[0];
                                                         if (file) {
@@ -106,7 +105,7 @@
                                                     });
                                                 });
                                             </script>
-                                            
+
                                         </td>
                                         <td class="font-semibold capitalize text-center">{{ $item->user->nama }}</td>
                                         @php
@@ -196,7 +195,8 @@
                                                                 </tr>
                                                                 <tr>
                                                                     <td class="border px-4 py-2 rounded-lg">
-                                                                        <strong>NIK:</strong> {{ $item->nik }}</td>
+                                                                        <strong>NIK:</strong> {{ $item->nik }}
+                                                                    </td>
                                                                     <td class="border px-4 py-2 rounded-lg">
                                                                         <strong>NIK:</strong>
                                                                         {{ $item->pendamping->nik ?? 'Tidak Ada' }}
@@ -205,7 +205,8 @@
                                                                 <tr>
                                                                     <td class="border px-4 py-2 rounded-lg">
                                                                         <strong>Pembiayaan:</strong>
-                                                                        {{ $item->pembiayaan }}</td>
+                                                                        {{ $item->pembiayaan }}
+                                                                    </td>
                                                                     <td class="border px-4 py-2 rounded-lg">
                                                                         <strong>Pembiayaan:</strong>
                                                                         {{ $item->pendamping->pembiayaan ?? 'Tidak Ada' }}
@@ -241,7 +242,8 @@
                                                                 <tr>
                                                                     <td class="border px-4 py-2 rounded-lg">
                                                                         <strong>Tempat:</strong>
-                                                                        {{ $item->tempat_lahir }}</td>
+                                                                        {{ $item->tempat_lahir }}
+                                                                    </td>
                                                                     <td class="border px-4 py-2 rounded-lg">
                                                                         <strong>Tempat:</strong>
                                                                         {{ $item->pendamping->tempat_lahir ?? 'Tidak Ada' }}
@@ -250,7 +252,8 @@
                                                                 <tr>
                                                                     <td class="border px-4 py-2 rounded-lg">
                                                                         <strong>Tanggal Lahir:</strong>
-                                                                        {{ $item->tanggal_lahir }}</td>
+                                                                        {{ $item->tanggal_lahir }}
+                                                                    </td>
                                                                     <td class="border px-4 py-2 rounded-lg">
                                                                         <strong>Tanggal Lahir:</strong>
                                                                         {{ $item->pendamping->tanggal_lahir ?? 'Tidak Ada' }}
@@ -259,7 +262,8 @@
                                                                 <tr>
                                                                     <td class="border px-4 py-2 rounded-lg">
                                                                         <strong>Pendidikan:</strong>
-                                                                        {{ $item->pendidikan }}</td>
+                                                                        {{ $item->pendidikan }}
+                                                                    </td>
                                                                     <td class="border px-4 py-2 rounded-lg">
                                                                         <strong>Pendidikan:</strong>
                                                                         {{ $item->pendamping->pendidikan ?? 'Tidak Ada' }}
@@ -268,7 +272,8 @@
                                                                 <tr>
                                                                     <td class="border px-4 py-2 rounded-lg">
                                                                         <strong>Pekerjaan:</strong>
-                                                                        {{ $item->pekerjaan }}</td>
+                                                                        {{ $item->pekerjaan }}
+                                                                    </td>
                                                                     <td class="border px-4 py-2 rounded-lg">
                                                                         <strong>Pekerjaan:</strong>
                                                                         {{ $item->pendamping->pekerjaan ?? 'Tidak Ada' }}
@@ -277,7 +282,8 @@
                                                                 <tr>
                                                                     <td class="border px-4 py-2 rounded-lg">
                                                                         <strong>Alamat Rumah:</strong>
-                                                                        {{ $item->alamat }}</td>
+                                                                        {{ $item->alamat }}
+                                                                    </td>
                                                                     <td class="border px-4 py-2 rounded-lg">
                                                                         <strong>Alamat Rumah:</strong>
                                                                         {{ $item->pendamping->alamat ?? 'Tidak Ada' }}
@@ -285,7 +291,8 @@
                                                                 </tr>
                                                                 <tr>
                                                                     <td class="border px-4 py-2 rounded-lg">
-                                                                        <strong>Telepon:</strong> {{ $item->user->no_hp }}
+                                                                        <strong>Telepon:</strong>
+                                                                        {{ $item->user->no_hp }}
                                                                     </td>
                                                                     <td class="border px-4 py-2 rounded-lg">
                                                                         <strong>Telepon:</strong>

@@ -2,19 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Ibu;
+use App\Models\KondisiKesehatan;
 use Illuminate\Http\Request;
 
-class PernyataanPelayananController extends Controller
+class KondisiKesehatanController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        return view('dashboard.pernyataan_pelayanan', [
-            'ibu' => Ibu::all(),
-        ]);
+        //
     }
 
     /**
@@ -36,7 +34,7 @@ class PernyataanPelayananController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(KondisiKesehatan $kondisiKesehatan)
     {
         //
     }
@@ -44,7 +42,7 @@ class PernyataanPelayananController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(KondisiKesehatan $kondisiKesehatan)
     {
         //
     }
@@ -52,7 +50,7 @@ class PernyataanPelayananController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, KondisiKesehatan $kondisiKesehatan)
     {
         //
     }
@@ -60,7 +58,7 @@ class PernyataanPelayananController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(KondisiKesehatan $kondisiKesehatan)
     {
         //
     }
