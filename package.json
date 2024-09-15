@@ -12,5 +12,10 @@
         "postcss": "^8.4.41",
         "tailwindcss": "^3.4.10",
         "vite": "^4.0.0"
+    },
+    "dependencies": {
+        "@pdfme/common": "^4.5.0",
+        "@pdfme/generator": "^4.5.0",
+        "@pdfme/ui": "^4.5.0"
     }
 }
