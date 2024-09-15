@@ -1,6 +1,5 @@
-import './bootstrap';
-import { Designer } from '@pdfme/ui';
 import { generate } from '@pdfme/generator';
+import './bootstrap';
 
 window.transformData = (arr = []) => {
   const toRemove = new Set();
