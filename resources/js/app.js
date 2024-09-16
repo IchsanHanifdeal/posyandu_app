@@ -9,24 +9,33 @@ const font = {
   },
 };
 
-window.transformData = (arr = []) => {
-  const toRemove = new Set();
-  const result = arr.reduce((acc, item) => {
-    if (item.startsWith('_')) return acc;
+window.transformData = (input) => {
+  const result = [];
+  const groups = new Map();
 
-    const [base, sub] = item.split('>');
-    if (sub) {
-      acc.push([base, sub]);
-      toRemove.add(base);
-    } else if (!toRemove.has(item)) {
-      acc.push(item);
+  for (const item of input) {
+    if (item.includes('>')) {
+      const [groupKey, ...subKeys] = item.split('>');
+      if (!groups.has(groupKey)) {
+        groups.set(groupKey, new Set([groupKey, ...subKeys]));
+      } else {
+        subKeys.forEach(key => groups.get(groupKey).add(key));
+      }
     }
-    return acc;
-  }, []);
+  }
 
-  return result.filter(item =>
-    typeof item === 'string' ? !toRemove.has(item) : true
-  );
+  for (const item of input) {
+    if (item.includes('>')) {
+      const [groupKey] = item.split('>');
+      if (!result.some(r => Array.isArray(r) && r[0] === groupKey)) {
+        result.push([...groups.get(groupKey)]);
+      }
+    } else if (!Array.from(groups.values()).some(group => group.has(item))) {
+      result.push(item);
+    }
+  }
+
+  return result;
 }
 
 window.generatePDF = ({ template, inputs }) => {
@@ -41,6 +50,7 @@ window.setupRenderListing = ({ id }) => {
 
   const container = document.querySelector(`#${id} #container`);
   const listing = transformData(Object.keys(window[id]()));
+  console.log("🚀 ~ listing:", listing)
 
   const renderDatas = (data, parentId = '', parentContainer = null) => {
     const containerEl = parentContainer || container;

@@ -261,7 +261,7 @@ window.AMANAT_PERSALINAN_IBU = () => {
   }
 }
 
-window.PELAYANAN_DOKTER = () => {
+window.PELAYANAN_DOKTER_EVALUASI = () => {
   SCHEME.fontSize = 8
   return {
     _HIDE_PAGE: {

@@ -27,6 +27,11 @@ class AuthController extends Controller
 		return view('dashboard.pelayanan_dokter');
 	}
 
+	public function pelayananKehamilan()
+	{
+		return view('dashboard.pelayanan_kehamilan');
+	}
+
 	/**
 	 * Show the form for creating a new resource.
 	 */
