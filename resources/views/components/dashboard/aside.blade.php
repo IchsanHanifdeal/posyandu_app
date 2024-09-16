@@ -1,4 +1,4 @@
-<div class="drawer-side border-r z-20">
+<div class="drawer-side border-r z-20 !hidden">
     <label for="aside-dashboard" aria-label="close sidebar" class="drawer-overlay"></label>
     <ul
         class="bg-[#f7e8f3] menu flex flex-col justify-between p-4 w-64 lg:w-72 min-h-full scrollbar-custom [&>li>a]:gap-4 [&>li]:my-1.5 [&>li]:text-[14.3px] [&>li]:font-medium [&>li]:text-opacity-80 [&>li]:text-base [&>_*_svg]:stroke-[1.5] [&>_*_svg]:size-[23px]">

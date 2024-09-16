@@ -9,7 +9,10 @@
               <h1 class="flex items-start gap-3 font-semibold font-[onest] text-lg capitalize">
                 {{ str_replace('_', ' ', $item) }}
               </h1>
-              <label for="add_data_AMANAT_PERSALINAN_IBU" class="ml-auto btn">Tambah Data</label>
+              <div class="flex ml-auto gap-3">
+                <label for="add_data_AMANAT_PERSALINAN_IBU_v1" class="btn">Tambah Data v1</label>
+                <label for="add_data_AMANAT_PERSALINAN_IBU_v2" class="btn">Tambah Data v2</label>
+              </div>
             </div>
             <p class="text-sm opacity-60">
               Jelajahi dan ketahui amanat persalinan pada ibu hamil.
@@ -83,27 +86,51 @@
     </div>
   @else
   @endif
-  <div class="w-full min-h-screen" id="container"></div>
 </x-dashboard.main>
 
-<input type="checkbox" id="add_data_AMANAT_PERSALINAN_IBU" class="modal-toggle" />
+<input type="checkbox" id="add_data_AMANAT_PERSALINAN_IBU_v1" class="modal-toggle" />
 <div class="modal" role="dialog" id="AMANAT_PERSALINAN_IBU">
   <form onsubmit="setupFormGenerate(this, 'AMANAT_PERSALINAN_IBU', 'bkiabi-amanat-kesehatan.pdf')" action="javascript:void();" class="modal-box">
-    <h3 class="text-lg font-bold">Tambah Amanat Persalinan Ibu</h3>
+    <h3 class="text-lg font-bold">Tambah Amanat Persalinan Ibu v1</h3>
     <div id="container" class="flex flex-col w-full gap-2 mt-5">
     </div>
     <div class="modal-action">
-      <label for="add_data_AMANAT_PERSALINAN_IBU" class="btn">Tutup</label>
+      <label for="add_data_AMANAT_PERSALINAN_IBU_v1" class="btn">Tutup</label>
       <button type="submit" class="btn btn-primary">Cetak</button>
     </div>
   </form>
 </div>
+
+<input type="checkbox" id="add_data_AMANAT_PERSALINAN_IBU_v2" class="modal-toggle" />
+<div class="modal" role="dialog" id="AMANAT_PERSALINAN_IBU">
+  <form onsubmit="generateOutputForm()" action="javascript:void();" class="modal-box">
+    <h3 class="text-lg font-bold">Tambah Amanat Persalinan Ibu v2</h3>
+    <div id="pdf_form_AMANAT_PERSALINAN_IBU" class="w-full mt-5 rounded-lg overflow-hidden">
+    </div>
+    <div class="modal-action">
+      <label for="add_data_AMANAT_PERSALINAN_IBU_v2" class="btn">Tutup</label>
+      <button type="submit" class="btn btn-primary">Cetak</button>
+    </div>
+  </form>
 </div>
 
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
+  window.onload = async () => {
     setupRenderListing({
       id: 'AMANAT_PERSALINAN_IBU'
     })
-  });
+
+    const setupForm = await setupPDFForm({
+      file: 'bkiabi-amanat-kesehatan.pdf',
+      schemas: 'AMANAT_PERSALINAN_IBU',
+      id: 'pdf_form_AMANAT_PERSALINAN_IBU',
+    })
+
+    window.generateOutputForm = () => {
+      generatePDF({
+        template: setupForm.getTemplate(),
+        inputs: setupForm.getInputs()[0]
+      })
+    }
+  }
 </script>

@@ -1,5 +1,13 @@
 import { generate } from '@pdfme/generator';
 import './bootstrap';
+import { Designer, Form } from "@pdfme/ui";
+
+const font = {
+  lucida: {
+    data: 'https://fonts.cdnfonts.com/s/16217/LSANSD.woff',
+    fallback: true
+  },
+};
 
 window.transformData = (arr = []) => {
   const toRemove = new Set();
@@ -21,18 +29,18 @@ window.transformData = (arr = []) => {
   );
 }
 
-const font = {
-  lucida: {
-    data: 'https://fonts.cdnfonts.com/s/16217/LSANSD.woff',
-    fallback: true
-  },
-};
+window.generatePDF = ({ template, inputs }) => {
+  generate({ template, inputs: [inputs], options: { font } }).then((pdf) => {
+    const blob = new Blob([pdf.buffer], { type: 'application/pdf' });
+    window.open(URL.createObjectURL(blob), '_blank');
+  });
+}
 
 window.setupRenderListing = ({ id }) => {
   const formatLabel = (label) => label.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
 
   const container = document.querySelector(`#${id} #container`);
-  const listing = transformData(Object.keys(window[id]));
+  const listing = transformData(Object.keys(window[id]()));
 
   const renderDatas = (data, parentId = '', parentContainer = null) => {
     const containerEl = parentContainer || container;
@@ -99,17 +107,39 @@ window.setupFormGenerate = async (form, schemas, file) => {
   const formData = new FormData(form);
   const data = Object.fromEntries(formData);
 
-  await setupPDFGenerate({ file, schemas: window[schemas], inputs: data });
+  await setupPDFGenerate({ file, schemas: window[schemas](), inputs: data });
 }
 
 window.setupPDFGenerate = async ({ file, schemas, inputs }) => {
   const api = await fetch('/pdf/base64?path=/docs/' + file)
   const res = await api.json();
-
   const template = { basePdf: res.base64, schemas: [schemas] };
 
-  generate({ template, inputs: [inputs], options: { font } }).then((pdf) => {
-    const blob = new Blob([pdf.buffer], { type: 'application/pdf' });
-    window.open(URL.createObjectURL(blob), '_blank');
-  });
+  generatePDF({ template, inputs });
+}
+
+window.setupPDFDesign = async ({ file, schemas, id }) => {
+  const api = await fetch('/pdf/base64?path=/docs/' + file)
+  const res = await api.json();
+
+  const template = { basePdf: res.base64, schemas: [window[schemas]()] };
+
+  const domContainer = document.getElementById(id)
+  const designer = new Designer({ domContainer, template, options: { font } });
+
+  designer.onChangeTemplate((template) => {
+    console.log(JSON.stringify(template.schemas, null, 2));
+  })
+}
+
+window.setupPDFForm = async ({ file, schemas, id }) => {
+  const api = await fetch('/pdf/base64?path=/docs/' + file)
+  const res = await api.json();
+
+  const template = { basePdf: res.base64, schemas: [window[schemas]()] };
+
+  const domContainer = document.getElementById(id)
+  const form = new Form({ domContainer, template, inputs: [{ saya: '' }], options: { font } });
+
+  return form
 }
