@@ -35,7 +35,7 @@ window.transformData = (input) => {
     }
   }
 
-  return result;
+  return result
 }
 
 window.generatePDF = ({ template, inputs }) => {
