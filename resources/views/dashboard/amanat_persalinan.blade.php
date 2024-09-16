@@ -78,7 +78,8 @@
                                                             class="size-5 hover:stroke-black cursor-pointer"
                                                             onclick="document.getElementById('sign_modal_{{ $item->id_user }}_ibu').showModal();" />
                                                     </div>
-                                                    <div class="tooltip tooltip-bottom" data-tip="Tanda Tangan pendamping">
+                                                    <div class="tooltip tooltip-bottom"
+                                                        data-tip="Tanda Tangan pendamping">
                                                         <x-lucide-signature
                                                             class="size-5 hover:stroke-black cursor-pointer"
                                                             onclick="document.getElementById('sign_modal_{{ $item->id_user }}_pendamping').showModal();" />
