@@ -11,6 +11,10 @@ use App\Http\Controllers\InformasiController;
 use App\Http\Controllers\IdentitasIbuController;
 use App\Http\Controllers\PernyataanPelayananController;
 
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\Request;
+
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -21,6 +25,16 @@ use App\Http\Controllers\PernyataanPelayananController;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+
+Route::get('/pdf/base64', function (Request $request) {
+    $path = $request->query('path');
+    if (!Storage::exists($path) || !str_starts_with($path, '/docs/')) {
+        return response()->json(['error' => 'Invalid or non-existent file path'], 400);
+    }
+    $base64 =
+        'data:application/pdf;base64,' . base64_encode(Storage::get($path));
+    return response()->json(['base64' => $base64]);
+});
 
 Route::get('/', [AuthController::class, 'index'])->name('login');
 Route::post('/auth', [AuthController::class, 'auth'])->name('auth.login');

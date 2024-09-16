@@ -2,53 +2,60 @@
     @if (Auth::user()->role === 'admin')
         <div class="flex gap-5">
             @foreach (['daftar_amanat_persalinan_ibu_hamil'] as $item)
-                <div class="flex flex-col border-back rounded-xl w-full">
-                    <div class="p-5 sm:p-7 bg-white rounded-t-xl">
-                        <h1 class="flex items-start gap-3 font-semibold font-[onest] text-lg capitalize">
-                            {{ str_replace('_', ' ', $item) }}
-                        </h1>
+                <div class="flex flex-col w-full border-back rounded-xl">
+                    <div class="p-5 bg-white sm:p-7 rounded-t-xl">
+                        <div class="flex items-center">
+
+                            <h1 class="flex items-start gap-3 font-semibold font-[onest] text-lg capitalize">
+                                {{ str_replace('_', ' ', $item) }}
+                            </h1>
+                            <div class="flex ml-auto gap-3">
+                                <label for="add_data_AMANAT_PERSALINAN_IBU_v1" class="btn">Tambah Data v1</label>
+                                <label for="add_data_AMANAT_PERSALINAN_IBU_v2" class="btn">Tambah Data v2</label>
+                            </div>
+                        </div>
                         <p class="text-sm opacity-60">
                             Jelajahi dan ketahui amanat persalinan pada ibu hamil.
                         </p>
                     </div>
-                    <div class="flex flex-col rounded-b-xl gap-3 divide-y pt-0 p-5 sm:p-7">
+                    <div class="flex flex-col gap-3 p-5 pt-0 divide-y rounded-b-xl sm:p-7">
                         <div class="overflow-x-auto">
-                            <table class="table table-zebra w-full">
+                            <table class="table w-full table-zebra">
                                 <thead>
                                     <tr>
                                         @foreach (['No', 'NIK', 'Nama', 'No Handphone', 'No Kohort'] as $header)
-                                            <th class="uppercase font-bold text-center">{{ $header }}</th>
+                                            <th class="font-bold text-center uppercase">{{ $header }}</th>
                                         @endforeach
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @forelse ($ibu as $i => $item)
                                         <tr>
-                                            <td class="text-center font-semibold">{{ $i + 1 }}</td>
-                                            <td class="text-center font-semibold">{{ $item->nik }}</td>
-                                            <td class="text-center font-bold">{{ $item->user->nama }}</td>
+                                            <td class="font-semibold text-center">{{ $i + 1 }}</td>
+                                            <td class="font-semibold text-center">{{ $item->nik }}</td>
+                                            <td class="font-bold text-center">{{ $item->user->nama }}</td>
                                             @php
                                                 $phoneNumber = $item->user->no_hp;
                                                 if (substr($phoneNumber, 0, 2) === '08') {
                                                     $phoneNumber = '+628' . substr($phoneNumber, 2);
                                                 }
-
                                                 $waLink = 'https://wa.me/' . $phoneNumber;
                                             @endphp
 
-                                            <td class="font-semibold text-blue-700 text-center">
+                                            <td class="font-semibold text-center text-blue-700">
                                                 <a href="{{ $waLink }}"
                                                     target="_blank">{{ $item->user->no_hp }}</a>
                                             </td>
                                             <td class="text-center">{{ $item->no_register_kohort }}</td>
                                             <td class="flex items-center gap-4">
-                                                <x-lucide-book-user class="size-5 hover:stroke-blue-500 cursor-pointer"
+                                                <!-- Icon Book User that triggers the modal -->
+                                                <x-lucide-book-user class="cursor-pointer size-5 hover:stroke-blue-500"
                                                     onclick="document.getElementById('detail_modal_{{ $item->id_user }}').showModal();" />
 
                                                 <dialog id="detail_modal_{{ $item->id_user }}"
                                                     class="modal modal-bottom sm:modal-middle">
                                                     <div class="modal-box">
-                                                        <h3 class="font-bold text-lg">Detail Amanat Persalinan</h3>
+                                                        <h3 class="text-lg font-bold">Detail Amanat Persalinan</h3>
                                                         <p class="py-4">Apakah Anda ingin mencetak dokumen Amanat
                                                             Persalinan?</p>
 
@@ -70,7 +77,7 @@
                                                         data-tip="Tanda Tangan Dokter/Bidan">
                                                         <x-lucide-signature
                                                             class="size-5 hover:stroke-black cursor-pointer"
-                                                            onclick="document.getElementById('sign_modal_{{ $item->id_user }}_bidan').showModal();" />
+                                                            onclick="document.getElementById('sign_modal_{{ $item->id_user }}').showModal();" />
                                                     </div>
                                                 @elseif (Auth::user()->role === 'user')
                                                     <div class="tooltip tooltip-bottom" data-tip="Tanda Tangan Ibu">
@@ -106,13 +113,12 @@
                                                         </div>
                                                     </div>
                                                 </dialog>
-
                                             </td>
 
                                         </tr>
                                     @empty
                                         <tr>
-                                            <td class="text-gray-700 text-center capitalize" colspan="5">Tidak ada
+                                            <td class="text-center text-gray-700 capitalize" colspan="5">Tidak ada
                                                 data
                                                 amanat persalinain</td>
                                         </tr>
@@ -124,10 +130,55 @@
                 </div>
             @endforeach
         </div>
-    @else
     @endif
 </x-dashboard.main>
+
+<input type="checkbox" id="add_data_AMANAT_PERSALINAN_IBU_v1" class="modal-toggle" />
+<div class="modal" role="dialog" id="AMANAT_PERSALINAN_IBU">
+    <form onsubmit="setupFormGenerate(this, 'AMANAT_PERSALINAN_IBU', 'bkiabi-amanat-kesehatan.pdf')"
+        action="javascript:void();" class="modal-box">
+        <h3 class="text-lg font-bold">Tambah Amanat Persalinan Ibu v1</h3>
+        <div id="container" class="flex flex-col w-full gap-2 mt-5">
+        </div>
+        <div class="modal-action">
+            <label for="add_data_AMANAT_PERSALINAN_IBU_v1" class="btn">Tutup</label>
+            <button type="submit" class="btn btn-primary">Cetak</button>
+        </div>
+    </form>
+</div>
+
+<input type="checkbox" id="add_data_AMANAT_PERSALINAN_IBU_v2" class="modal-toggle" />
+<div class="modal" role="dialog" id="AMANAT_PERSALINAN_IBU">
+    <form onsubmit="generateOutputForm()" action="javascript:void();" class="modal-box">
+        <h3 class="text-lg font-bold">Tambah Amanat Persalinan Ibu v2</h3>
+        <div id="pdf_form_AMANAT_PERSALINAN_IBU" class="w-full mt-5 rounded-lg overflow-hidden">
+        </div>
+        <div class="modal-action">
+            <label for="add_data_AMANAT_PERSALINAN_IBU_v2" class="btn">Tutup</label>
+            <button type="submit" class="btn btn-primary">Cetak</button>
+        </div>
+    </form>
+</div>
+
 <script>
+    window.onload = async () => {
+        setupRenderListing({
+            id: 'AMANAT_PERSALINAN_IBU'
+        })
+
+        const setupForm = await setupPDFForm({
+            file: 'bkiabi-amanat-kesehatan.pdf',
+            schemas: 'AMANAT_PERSALINAN_IBU',
+            id: 'pdf_form_AMANAT_PERSALINAN_IBU',
+        })
+
+        window.generateOutputForm = () => {
+            generatePDF({
+                template: setupForm.getTemplate(),
+                inputs: setupForm.getInputs()[0]
+            })
+        }
+    }
     document.addEventListener('DOMContentLoaded', function() {
         @foreach ($ibu as $item)
             let canvas = document.getElementById('signature_pad_{{ $item->id_user }}');
