@@ -1,5 +1,7 @@
-import { generate } from '@pdfme/generator';
 import './bootstrap';
+import PizZip from 'pizzip'
+import Docxtemplater from 'docxtemplater'
+import { generate } from '@pdfme/generator';
 import { Designer, Form } from "@pdfme/ui";
 
 const font = {
@@ -8,6 +10,29 @@ const font = {
     fallback: true
   },
 };
+
+window.getBase64 = async ({ file }) => {
+  const api = await fetch('/pdf/base64?path=/docs/' + file)
+  const res = await api.json();
+  return res.base64
+}
+
+window.extractDocx = async ({ file }) => {
+  const file = await getBase64(file)
+  const zip = new PizZip(file, { base64: true });
+  const doc = new Docxtemplater(zip, {
+    paragraphLoop: true,
+    linebreaks: true,
+  });
+  console.log({ doc })
+  // return {
+  //   getKeys: async () => {
+  //     const data = await doc.resolveData()
+  //     console.log(data)
+  //     // const parse = data.map()
+  //   }
+  // }
+}
 
 window.transformData = (input) => {
   const result = [];

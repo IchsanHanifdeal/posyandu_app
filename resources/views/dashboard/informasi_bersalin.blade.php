@@ -1,4 +1,4 @@
-<x-dashboard.main title="Informasi Ibu Bersalin">
+    <x-dashboard.main title="Informasi Ibu Bersalin">
     @foreach (['Daftar_informasi_ibu_hamil'] as $item)
         <div class="flex flex-col border-back rounded-xl w-full">
             <div class="p-5 sm:p-7 bg-white rounded-t-xl">
