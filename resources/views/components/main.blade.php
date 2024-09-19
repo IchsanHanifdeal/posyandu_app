@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="valentine">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" data-theme="valentine">
 
 <head>
   @include('components.head')
@@ -88,8 +88,8 @@
         splashScreen.classList.add('show');
       });
     </script>
-    @stack('scripts')
   </main>
+  @stack('scripts')
 </body>
 
 </html>

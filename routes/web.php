@@ -32,7 +32,7 @@ Route::get('/pdf/base64', function (Request $request) {
         return response()->json(['error' => 'Invalid or non-existent file path'], 400);
     }
     $base64 =
-        'data:application/pdf;base64,' . base64_encode(Storage::get($path));
+        base64_encode(Storage::get($path));
     return response()->json(['base64' => $base64]);
 });
 
