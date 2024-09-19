@@ -16,6 +16,10 @@
             <p class="text-sm opacity-60">
               Jelajahi dan ketahui amanat persalinan pada ibu hamil.
             </p>
+            <h1 class="btn btn-sm btn-primary w-fit mt-5 text-white flex items-center gap-1.5">
+              <x-lucide-link-2 class="size-4" />
+              <span>amanat-persalinan.docx</span>
+            </h1>
           </div>
           <div class="flex flex-col gap-3 p-5 pt-0 divide-y rounded-b-xl sm:p-7">
             <div class="overflow-x-auto">
@@ -28,7 +32,7 @@
                   </tr>
                 </thead>
                 <tbody>
-                  @forelse ($ibu as $i => $item)
+                  @forelse ([...$ibu,...$ibu] as $i => $item)
                     <tr>
                       <td class="font-semibold text-center">{{ $i + 1 }}</td>
                       <td class="font-semibold text-center">{{ $item->nik }}</td>
@@ -45,8 +49,10 @@
                       </td>
                       <td class="text-center">{{ $item->no_register_kohort }}</td>
                       <td class="flex items-center gap-4">
-                        <x-lucide-book-user class="cursor-pointer size-5 hover:stroke-blue-500"
+                        <x-lucide-square-pen class="cursor-pointer size-5 hover:stroke-blue-500"
                           onclick="document.getElementById('detail_modal_{{ $item->id_user }}').showModal();" />
+
+                        <x-lucide-printer class="cursor-pointer size-5 hover:stroke-blue-500" onclick="document.getElementById('detail_modal_{{ $item->id_user }}').showModal();" />
 
                         <dialog id="detail_modal_{{ $item->id_user }}" class="modal modal-bottom sm:modal-middle">
                           <div class="modal-box">
@@ -66,7 +72,7 @@
                         @if (Auth::user()->role === 'admin')
                           <div class="tooltip tooltip-top" data-tip="Tanda Tangan Dokter/Bidan">
                             <x-lucide-signature class="size-5 hover:stroke-black cursor-pointer"
-                              onclick="document.getElementById('sign_modal_{{ $item->id_user }}_bidan').showModal();" />
+                              onclick="document.getElementById('sign_modal_{{ $item->id_user }}').showModal();" />
                           </div>
                         @elseif (Auth::user()->role === 'user')
                           <div class="tooltip tooltip-bottom" data-tip="Tanda Tangan Ibu">
@@ -136,6 +142,14 @@
 
 <script>
   window.onload = async () => {
+    const y = await extractDocx({
+      file: 'bkiabi-amanat-persalinan.docx'
+    })
+
+    generateDocx({
+      file: 'docx/bkiabi-amanat-persalinan.docx'
+    })
+
     setupRenderListing({
       id: 'AMANAT_PERSALINAN_IBU'
     })
@@ -205,3 +219,4 @@
     alert('Tanda tangan berhasil disimpan!');
   }
 </script>
+
