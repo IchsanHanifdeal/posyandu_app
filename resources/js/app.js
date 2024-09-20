@@ -202,6 +202,7 @@ window.extractDocx = async ({ file }) => {
       }
     },
     renderKeys: (keys) => doc.render(keys),
-    getZip: () => doc.getZip()
+    getZip: () => doc.getZip(),
+    doc: () => doc
   }
 }

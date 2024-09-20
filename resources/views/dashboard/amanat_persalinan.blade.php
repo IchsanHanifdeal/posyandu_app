@@ -154,7 +154,7 @@
       Persalinan?</p>
 
     <div class="modal-action">
-      <button onclick="cetak()" class="btn btn-primary">
+      <button onclick="generate()" class="btn btn-primary">
         Cetak
       </button>
       <button class="btn" onclick="document.getElementById('detail_modal_{{ $item->id_user }}').close();">
@@ -176,6 +176,35 @@
     });
   }
 
+  function loadFile(url, callback) {
+    PizZipUtils.getBinaryContent(url, callback);
+  }
+  window.generate = function generate() {
+    loadFile(
+      "/docx/bkiabi-amanat-persalinan.docx",
+      function(error, content) {
+        if (error) {
+          throw error;
+        }
+        const zip = new PizZip(content);
+        const doc = new window.docxtemplater(zip, {
+          paragraphLoop: true,
+          linebreaks: true,
+        });
+
+        doc.render(TEMP_STORE);
+
+        const blob = doc.getZip().generate({
+          type: "blob",
+          mimeType: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+          compression: "DEFLATE",
+        });
+
+        saveAs(blob, "output.docx");
+      }
+    );
+  };
+
   function generatePDFFile(form) {
     const data = new FormData(form);
     const parse = Object.fromEntries(data);
@@ -190,16 +219,15 @@
     })
 
     window.cetak = () => {
-      data.renderKeys(TEMP_STORE);
+      console.log("🚀 ~ window.onload= ~ TEMP_STORE:", TEMP_STORE)
+      data.doc().render(TEMP_STORE);
 
-      const blob = data.getZip().generate({
-        type: "base64",
+      const blob = data.doc().getZip().generate({
+        type: "blob",
         mimeType: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
         compression: "DEFLATE",
       });
-
-      const googleViewerUrl = `https://docs.google.com/viewer?url=${encodeURIComponent(blob)}&embedded=true`;
-      window.open(googleViewerUrl, '_blank');
+      saveAs(blob, "output.docx");
     }
 
     setupRenderListing({
