@@ -1,6 +1,8 @@
-import { generate } from '@pdfme/generator';
 import './bootstrap';
+import { generate } from '@pdfme/generator';
 import { Designer, Form } from "@pdfme/ui";
+import Docxtemplater from 'docxtemplater'
+import PizZip from 'pizzip'
 
 const font = {
   lucida: {
@@ -39,18 +41,20 @@ window.transformData = (input) => {
 }
 
 window.generatePDF = ({ template, inputs }) => {
+  console.log("🚀 ~ inputs:", inputs)
+  console.log("🚀 ~ template:", template)
   generate({ template, inputs: [inputs], options: { font } }).then((pdf) => {
     const blob = new Blob([pdf.buffer], { type: 'application/pdf' });
     window.open(URL.createObjectURL(blob), '_blank');
   });
 }
 
-window.setupRenderListing = ({ id }) => {
-  const formatLabel = (label) => label.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+window.formatLabel = (label) => label.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
 
-  const container = document.querySelector(`#${id} #container`);
-  const listing = transformData(Object.keys(window[id]()));
-  console.log("🚀 ~ listing:", listing)
+window.setupRenderListing = ({ id, lists }) => {
+
+  const container = document.querySelector(`#${id}`);
+  const listing = lists
 
   const renderDatas = (data, parentId = '', parentContainer = null) => {
     const containerEl = parentContainer || container;
@@ -121,11 +125,34 @@ window.setupFormGenerate = async (form, schemas, file) => {
 }
 
 window.setupPDFGenerate = async ({ file, schemas, inputs }) => {
-  const api = await fetch('/pdf/base64?path=/docs/' + file)
-  const res = await api.json();
-  const template = { basePdf: res.base64, schemas: [schemas] };
+  // const api = await fetch('/pdf/base64?path=/docs/' + file)
+  // const res = await api.json();
+  const template = {
+    basePdf: file, schemas: [{
+      s: {
+        "type": "text",
+        "content": " ",
+        "position": {
+          "x": 27.5,
+          "y": 45.90
+        },
+        "width": 120,
+        "height": 4,
+        "rotate": 0,
+        "alignment": "left",
+        "verticalAlignment": "top",
+        "fontSize": 9.5,
+        "lineHeight": 1,
+        "characterSpacing": 0,
+        "fontColor": "#2C2E35",
+        //   "required": true,
+        "fontName": "lucida",
+        "backgroundColor": "#E7F4DF"
+      }
+    }]
+  };
 
-  generatePDF({ template, inputs });
+  generatePDF({ template, inputs: { s: ' ' } });
 }
 
 window.setupPDFDesign = async ({ file, schemas, id }) => {
@@ -152,4 +179,29 @@ window.setupPDFForm = async ({ file, schemas, id }) => {
   const form = new Form({ domContainer, template, inputs: [{ saya: '' }], options: { font } });
 
   return form
+}
+
+window.extractDocx = async ({ file }) => {
+  const api = await fetch('/pdf/base64?path=' + file)
+  const res = await api.json();
+  const zip = new PizZip(res.base64, { base64: true });
+  const doc = new Docxtemplater(zip, {
+    paragraphLoop: true,
+    linebreaks: true,
+  });
+
+  return {
+    getKeys: async () => {
+      const data = await doc.resolveData()
+      const parse = await data.map(x => x.tag)
+      const filter = parse.filter(x => !x.startsWith('%')).map(x => formatLabel(x.replace('_', ' ')))
+
+      return {
+        fresh: parse,
+        labeling: filter
+      }
+    },
+    renderKeys: (keys) => doc.render(keys),
+    getZip: () => doc.getZip()
+  }
 }
