@@ -1,208 +1,155 @@
 import './bootstrap';
-import { generate } from '@pdfme/generator';
-import { Designer, Form } from "@pdfme/ui";
-import Docxtemplater from 'docxtemplater'
-import PizZip from 'pizzip'
 
-const font = {
-  lucida: {
-    data: 'https://fonts.cdnfonts.com/s/16217/LSANSD.woff',
-    fallback: true
-  },
-};
-
-window.transformData = (input) => {
-  const result = [];
-  const groups = new Map();
-
-  for (const item of input) {
-    if (item.includes('>')) {
-      const [groupKey, ...subKeys] = item.split('>');
-      if (!groups.has(groupKey)) {
-        groups.set(groupKey, new Set([groupKey, ...subKeys]));
-      } else {
-        subKeys.forEach(key => groups.get(groupKey).add(key));
-      }
-    }
-  }
-
-  for (const item of input) {
-    if (item.includes('>')) {
-      const [groupKey] = item.split('>');
-      if (!result.some(r => Array.isArray(r) && r[0] === groupKey)) {
-        result.push([...groups.get(groupKey)]);
-      }
-    } else if (!Array.from(groups.values()).some(group => group.has(item))) {
-      result.push(item);
-    }
-  }
-
-  return result
+window.formatLabel = (label) => {
+  return label.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
 }
 
-window.generatePDF = ({ template, inputs }) => {
-  console.log("🚀 ~ inputs:", inputs)
-  console.log("🚀 ~ template:", template)
-  generate({ template, inputs: [inputs], options: { font } }).then((pdf) => {
-    const blob = new Blob([pdf.buffer], { type: 'application/pdf' });
-    window.open(URL.createObjectURL(blob), '_blank');
+window.loadFile = (url, cb) => {
+  PizZipUtils.getBinaryContent(url, cb);
+}
+
+window.renderFormInputs = (data, id) => {
+  const container = document.getElementById(id);
+  const createLabel = (forId, text) => {
+    const label = document.createElement('label');
+    label.htmlFor = forId;
+    label.textContent = formatLabel(text)
+    label.className = 'labelz'
+    return label;
+  };
+  const createElement = (type, props = {}) => Object.assign(document.createElement(type), props);
+  data.forEach(item => {
+    const [key, ...rest] = item.split(/[\||\=|\>]/gi);
+    const wrapper = createElement('div', {
+      className: 'mb-4 form-modal'
+    });
+    let input;
+    if (item.includes('=[')) {
+      const options = item.match(/\[(.*?)\]/)[1].split(',');
+      input = createElement('select', {
+        id: key,
+        name: key,
+        className: 'selectz'
+      });
+      options.forEach(opt => input.appendChild(createElement('option', {
+        value: opt.trim(),
+        textContent: formatLabel(opt.trim())
+      })));
+    } else if (item.includes('|?(')) {
+      const label = item.match(/\?\((.*?)\)/)[1];
+      input = createElement('label', {
+        htmlFor: key,
+      });
+      input.appendChild(createElement('input', {
+        type: 'checkbox',
+        id: key,
+        name: key,
+        className: 'checkboxz'
+      }));
+      input.appendChild(createElement('span', {
+        textContent: formatLabel(key)
+      }));
+    } else if (item.includes('|~(')) {
+      const label = item.match(/~\((.*?)\)/)[1];
+      input = createElement('label', {
+        htmlFor: key,
+      });
+      input.appendChild(createElement('input', {
+        type: 'checkbox',
+        id: key,
+        name: key,
+        className: 'switchz'
+      }));
+      input.appendChild(createElement('span', {
+        textContent: formatLabel(key)
+      }));
+    } else {
+      const options = rest.join('|');
+      input = createElement('input', {
+        type: 'text',
+        id: key,
+        name: key,
+        className: 'inputz',
+        required: options.includes('*')
+      });
+      if (options.includes('>')) {
+        const placeholder = options.match(/>(.*)/)[1];
+        input.placeholder = placeholder.startsWith('r(') ?
+          '.'.repeat(parseInt(placeholder.match(/r\(.,(\d+)\)/)[1])) :
+          placeholder;
+      }
+    }
+    if (!item.includes('|?(') && !item.includes('|~(')) {
+      wrapper.appendChild(createLabel(key, key));
+    }
+    wrapper.appendChild(input);
+    container.appendChild(wrapper);
   });
 }
 
-window.formatLabel = (label) => label.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
-
-window.setupRenderListing = ({ id, lists }) => {
-
-  const container = document.querySelector(`#${id}`);
-  const listing = lists
-
-  const renderDatas = (data, parentId = '', parentContainer = null) => {
-    const containerEl = parentContainer || container;
-
-    data.forEach(item => {
-      if (Array.isArray(item)) {
-        const firstItem = item[0];
-        const nestedItems = item.slice(1);
-
-        const divRow = document.createElement('div');
-        divRow.classList.add('flex', 'gap-2');
-
-        const divCol = document.createElement('div');
-        divCol.classList.add('flex', 'flex-col', 'w-full', 'gap-1');
-
-        const label = document.createElement('label');
-        label.classList.add('text-sm', 'font-bold');
-        label.textContent = formatLabel(firstItem);
-
-        const input = document.createElement('input');
-        input.type = 'text';
-
-        const inputId = parentId ? `${parentId}>${firstItem}` : firstItem;
-        input.name = inputId;
-        input.id = inputId;
-        input.classList.add('input', 'input-sm');
-
-        divCol.appendChild(label);
-        divCol.appendChild(input);
-        divRow.appendChild(divCol);
-
-        containerEl.appendChild(divRow);
-
-        renderDatas(nestedItems, inputId, divRow);
-      } else {
-        const divCol = document.createElement('div');
-        divCol.classList.add('flex', 'flex-col', 'w-full', 'gap-1');
-
-        const label = document.createElement('label');
-        label.classList.add('text-sm', 'font-bold');
-        label.textContent = formatLabel(item);
-
-        const input = document.createElement('input');
-        input.type = 'text';
-
-        const inputId = parentId ? `${parentId}>${item}` : item;
-        input.name = inputId;
-        input.id = inputId;
-        input.classList.add('input', 'input-sm');
-
-        divCol.appendChild(label);
-        divCol.appendChild(input);
-
-        containerEl.appendChild(divCol);
-      }
-    });
-  };
-
-  renderDatas(listing);
+window.autoFillForm = (data) => {
+  Object.keys(data).forEach(key => {
+    const input = document.getElementById(key);
+    if (input) {
+      input.value = data[key];
+    }
+  });
 }
 
-window.setupFormGenerate = async (form, schemas, file) => {
+window.parseForm = (form) => {
+  const data = new FormData(form);
+  const parse = Object.fromEntries(data);
+  Object.keys(parse).forEach(key => {
+    if (parse[key] === "on") parse[key] = "✓";
+    else if (parse[key] === "off") parse[key] = "-";
+  });
 
-  const formData = new FormData(form);
-  const data = Object.fromEntries(formData);
-
-  await setupPDFGenerate({ file, schemas: window[schemas](), inputs: data });
-}
-
-window.setupPDFGenerate = async ({ file, schemas, inputs }) => {
-  // const api = await fetch('/pdf/base64?path=/docs/' + file)
-  // const res = await api.json();
-  const template = {
-    basePdf: file, schemas: [{
-      s: {
-        "type": "text",
-        "content": " ",
-        "position": {
-          "x": 27.5,
-          "y": 45.90
-        },
-        "width": 120,
-        "height": 4,
-        "rotate": 0,
-        "alignment": "left",
-        "verticalAlignment": "top",
-        "fontSize": 9.5,
-        "lineHeight": 1,
-        "characterSpacing": 0,
-        "fontColor": "#2C2E35",
-        //   "required": true,
-        "fontName": "lucida",
-        "backgroundColor": "#E7F4DF"
-      }
-    }]
-  };
-
-  generatePDF({ template, inputs: { s: ' ' } });
-}
-
-window.setupPDFDesign = async ({ file, schemas, id }) => {
-  const api = await fetch('/pdf/base64?path=/docs/' + file)
-  const res = await api.json();
-
-  const template = { basePdf: res.base64, schemas: [window[schemas]()] };
-
-  const domContainer = document.getElementById(id)
-  const designer = new Designer({ domContainer, template, options: { font } });
-
-  designer.onChangeTemplate((template) => {
-    console.log(JSON.stringify(template.schemas, null, 2));
-  })
-}
-
-window.setupPDFForm = async ({ file, schemas, id }) => {
-  const api = await fetch('/pdf/base64?path=/docs/' + file)
-  const res = await api.json();
-
-  const template = { basePdf: res.base64, schemas: [window[schemas]()] };
-
-  const domContainer = document.getElementById(id)
-  const form = new Form({ domContainer, template, inputs: [{ saya: '' }], options: { font } });
-
-  return form
+  console.log("🚀 ~ parse:", parse)
+  return parse
 }
 
 window.extractDocx = async ({ file }) => {
-  const api = await fetch('/pdf/base64?path=' + file)
-  const res = await api.json();
-  const zip = new PizZip(res.base64, { base64: true });
-  const doc = new Docxtemplater(zip, {
-    paragraphLoop: true,
-    linebreaks: true,
+  const temp = new Promise((resolve, reject) => {
+    loadFile(file, (error, content) => {
+      if (error) reject(error);
+      const zip = new PizZip(content);
+      const doc = new window.docxtemplater(zip, {
+        paragraphLoop: true,
+        linebreaks: true,
+      });
+      resolve(doc)
+    })
+  })
+
+  return temp.then(x => x)
+}
+
+window.extractDocxKeys = async (doc) => {
+  const keys = await doc.resolveData()
+  const parse = keys.map(x => x.tag);
+
+  const _original = parse.map(x => x.toLowerCase());
+  const _legal = parse.map(x => x.toLowerCase().split(/[\||\=|\>]/)[0]);
+  const _label = _legal.filter(x => !x.startsWith('%')).map(x => formatLabel(x.replace('_', ' ')))
+
+  return {
+    original: () => _original,
+    legal: () => _legal,
+    label: () => _label
+  }
+}
+
+window.extractDocxBlob = async (doc, data) => {
+  doc.render(data);
+
+  const blob = doc.getZip().generate({
+    type: "blob",
+    mimeType: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    compression: "DEFLATE",
   });
 
   return {
-    getKeys: async () => {
-      const data = await doc.resolveData()
-      const parse = await data.map(x => x.tag)
-      const filter = parse.filter(x => !x.startsWith('%')).map(x => formatLabel(x.replace('_', ' ')))
-
-      return {
-        fresh: parse,
-        labeling: filter
-      }
-    },
-    renderKeys: (keys) => doc.render(keys),
-    getZip: () => doc.getZip(),
-    doc: () => doc
+    blob: () => blob,
+    url: () => URL.createObjectURL(blob)
   }
 }

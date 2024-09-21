@@ -9,10 +9,6 @@
               <h1 class="flex items-start gap-3 font-semibold font-[onest] text-lg capitalize">
                 {{ str_replace('_', ' ', $item) }}
               </h1>
-              <div class="flex ml-auto gap-3">
-                <label for="add_data_AMANAT_PERSALINAN_IBU_v1" class="btn">Tambah Data v1</label>
-                <label for="add_data_AMANAT_PERSALINAN_IBU_v2" class="btn">Tambah Data v2</label>
-              </div>
             </div>
             <p class="text-sm opacity-60">
               Jelajahi dan ketahui amanat persalinan pada ibu hamil.
@@ -130,7 +126,7 @@
 </div>
 
 <dialog id="input_modal_{{ $item->id_user }}" class="modal modal-bottom sm:modal-middle">
-  <form onsubmit="generatePDFFile(this)" action="javascript:void();"S class="modal-box">
+  <form onsubmit="parseForm(this)" action="javascript:void();"S class="modal-box">
     <h3 class="text-lg font-bold">Lengkapi Dokumen</h3>
     <div class="flex flex-col py-4" id="input_render_amanat_persalinan">
 
@@ -140,7 +136,7 @@
       <button type="submit" class="btn btn-primary">
         Simpan
       </button>
-      <button class="btn" onclick="document.getElementById('input_modal_{{ $item->id_user }}').close();">
+      <button class="btn" type="button" onclick="document.getElementById('input_modal_{{ $item->id_user }}').close();">
         Tutup
       </button>
     </div>
@@ -167,73 +163,15 @@
 <script>
   let TEMP_STORE;
 
-  function fillFormInputs(formData) {
-    Object.keys(formData).forEach(key => {
-      const input = document.getElementById(key);
-      if (input) {
-        input.value = formData[key];
-      }
-    });
-  }
-
-  function loadFile(url, callback) {
-    PizZipUtils.getBinaryContent(url, callback);
-  }
-  window.generate = function generate() {
-    loadFile(
-      "/docx/bkiabi-amanat-persalinan.docx",
-      function(error, content) {
-        if (error) {
-          throw error;
-        }
-        const zip = new PizZip(content);
-        const doc = new window.docxtemplater(zip, {
-          paragraphLoop: true,
-          linebreaks: true,
-        });
-
-        doc.render(TEMP_STORE);
-
-        const blob = doc.getZip().generate({
-          type: "blob",
-          mimeType: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-          compression: "DEFLATE",
-        });
-
-        saveAs(blob, "output.docx");
-      }
-    );
-  };
-
-  function generatePDFFile(form) {
-    const data = new FormData(form);
-    const parse = Object.fromEntries(data);
-    TEMP_STORE = parse;
-  }
-
   window.onload = async () => {
-    fillFormInputs(TEMP_STORE || {});
-
     const data = await extractDocx({
       file: '/docx/bkiabi-amanat-persalinan.docx'
     })
 
-    window.cetak = () => {
-      console.log("🚀 ~ window.onload= ~ TEMP_STORE:", TEMP_STORE)
-      data.doc().render(TEMP_STORE);
+    const keys = await extractDocxKeys(data)
+    const filter = keys.original().filter(x => !x.startsWith('%'));
 
-      const blob = data.doc().getZip().generate({
-        type: "blob",
-        mimeType: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-        compression: "DEFLATE",
-      });
-      saveAs(blob, "output.docx");
-    }
-
-    setupRenderListing({
-      id: 'input_render_amanat_persalinan',
-      lists: (await data.getKeys()).fresh.filter(x => !x.startsWith('%'))
-    })
+    renderFormInputs(filter, 'input_render_amanat_persalinan');
   }
 
   document.addEventListener('DOMContentLoaded', function() {
