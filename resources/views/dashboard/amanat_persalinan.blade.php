@@ -5,21 +5,14 @@
         <div class="flex flex-col w-full border-back rounded-xl">
           <div class="p-5 bg-white sm:p-7 rounded-t-xl">
             <div class="flex items-center">
+
               <h1 class="flex items-start gap-3 font-semibold font-[onest] text-lg capitalize">
                 {{ str_replace('_', ' ', $item) }}
               </h1>
-              <div class="flex ml-auto gap-3">
-                <label for="add_data_AMANAT_PERSALINAN_IBU_v1" class="btn">Tambah Data v1</label>
-                <label for="add_data_AMANAT_PERSALINAN_IBU_v2" class="btn">Tambah Data v2</label>
-              </div>
             </div>
             <p class="text-sm opacity-60">
               Jelajahi dan ketahui amanat persalinan pada ibu hamil.
             </p>
-            <h1 class="btn btn-sm btn-primary w-fit mt-5 text-white flex items-center gap-1.5">
-              <x-lucide-link-2 class="size-4" />
-              <span>amanat-persalinan.docx</span>
-            </h1>
           </div>
           <div class="flex flex-col gap-3 p-5 pt-0 divide-y rounded-b-xl sm:p-7">
             <div class="overflow-x-auto">
@@ -32,7 +25,7 @@
                   </tr>
                 </thead>
                 <tbody>
-                  @forelse ([...$ibu,...$ibu] as $i => $item)
+                  @forelse ($ibu as $i => $item)
                     <tr>
                       <td class="font-semibold text-center">{{ $i + 1 }}</td>
                       <td class="font-semibold text-center">{{ $item->nik }}</td>
@@ -44,30 +37,16 @@
                         }
                         $waLink = 'https://wa.me/' . $phoneNumber;
                       @endphp
+
                       <td class="font-semibold text-center text-blue-700">
                         <a href="{{ $waLink }}" target="_blank">{{ $item->user->no_hp }}</a>
                       </td>
                       <td class="text-center">{{ $item->no_register_kohort }}</td>
                       <td class="flex items-center gap-4">
-                        <x-lucide-square-pen class="cursor-pointer size-5 hover:stroke-blue-500"
-                          onclick="document.getElementById('detail_modal_{{ $item->id_user }}').showModal();" />
+                        <x-lucide-pen-square class="cursor-pointer size-5 hover:stroke-blue-500"
+                          onclick="document.getElementById('input_modal_{{ $item->id_user }}').showModal();" />
 
                         <x-lucide-printer class="cursor-pointer size-5 hover:stroke-blue-500" onclick="document.getElementById('detail_modal_{{ $item->id_user }}').showModal();" />
-
-                        <dialog id="detail_modal_{{ $item->id_user }}" class="modal modal-bottom sm:modal-middle">
-                          <div class="modal-box">
-                            <h3 class="text-lg font-bold">Detail Amanat Persalinan</h3>
-                            <p class="py-4">Apakah Anda ingin mencetak dokumen Amanat Persalinan?</p>
-                            <div class="modal-action">
-                              <a href="{{ route('print.amanat_persalinan') }}" target="_blank" class="btn btn-primary">
-                                Cetak
-                              </a>
-                              <button class="btn" onclick="document.getElementById('detail_modal_{{ $item->id_user }}').close();">
-                                Tutup
-                              </button>
-                            </div>
-                          </div>
-                        </dialog>
 
                         @if (Auth::user()->role === 'admin')
                           <div class="tooltip tooltip-top" data-tip="Tanda Tangan Dokter/Bidan">
@@ -85,11 +64,14 @@
                           </div>
                         @endif
 
+
                         <dialog id="sign_modal_{{ $item->id_user }}" class="modal modal-bottom sm:modal-middle">
                           <div class="modal-box">
                             <h3 class="font-bold text-lg">Tanda Tangan Digital</h3>
                             <p class="py-4">Silakan tanda tangan di bawah ini:</p>
+
                             <canvas id="signature_pad_{{ $item->id_user }}" style="border: 1px solid #000; width: 100%; height: 200px;"></canvas>
+
                             <div class="modal-action">
                               <button id="save_signature_{{ $item->id_user }}" class="btn btn-primary">Simpan</button>
                               <button id="clear_signature_{{ $item->id_user }}" class="btn">Bersihkan</button>
@@ -98,10 +80,13 @@
                           </div>
                         </dialog>
                       </td>
+
                     </tr>
                   @empty
                     <tr>
-                      <td class="text-center text-gray-700 capitalize" colspan="5">Tidak ada data amanat persalinan</td>
+                      <td class="text-center text-gray-700 capitalize" colspan="5">Tidak ada
+                        data
+                        amanat persalinain</td>
                     </tr>
                   @endforelse
                 </tbody>
@@ -140,32 +125,53 @@
   </form>
 </div>
 
+<dialog id="input_modal_{{ $item->id_user }}" class="modal modal-bottom sm:modal-middle">
+  <form onsubmit="parseForm(this)" action="javascript:void();"S class="modal-box">
+    <h3 class="text-lg font-bold">Lengkapi Dokumen</h3>
+    <div class="flex flex-col py-4" id="input_render_amanat_persalinan">
+
+    </div>
+
+    <div class="modal-action">
+      <button type="submit" class="btn btn-primary">
+        Simpan
+      </button>
+      <button class="btn" type="button" onclick="document.getElementById('input_modal_{{ $item->id_user }}').close();">
+        Tutup
+      </button>
+    </div>
+  </form>
+</dialog>
+
+<dialog id="detail_modal_{{ $item->id_user }}" class="modal modal-bottom sm:modal-middle">
+  <div class="modal-box">
+    <h3 class="text-lg font-bold">Detail Amanat Persalinan</h3>
+    <p class="py-4">Apakah Anda ingin mencetak dokumen Amanat
+      Persalinan?</p>
+
+    <div class="modal-action">
+      <button onclick="generate()" class="btn btn-primary">
+        Cetak
+      </button>
+      <button class="btn" onclick="document.getElementById('detail_modal_{{ $item->id_user }}').close();">
+        Tutup
+      </button>
+    </div>
+  </div>
+</dialog>
+
 <script>
+  let TEMP_STORE;
+
   window.onload = async () => {
-    const y = await extractDocx({
-      file: 'bkiabi-amanat-persalinan.docx'
+    const data = await extractDocx({
+      file: '/docx/bkiabi-amanat-persalinan.docx'
     })
 
-    generateDocx({
-      file: 'docx/bkiabi-amanat-persalinan.docx'
-    })
+    const keys = await extractDocxKeys(data)
+    const filter = keys.original().filter(x => !x.startsWith('%'));
 
-    setupRenderListing({
-      id: 'AMANAT_PERSALINAN_IBU'
-    })
-
-    const setupForm = await setupPDFForm({
-      file: 'bkiabi-amanat-kesehatan.pdf',
-      schemas: 'AMANAT_PERSALINAN_IBU',
-      id: 'pdf_form_AMANAT_PERSALINAN_IBU',
-    })
-
-    window.generateOutputForm = () => {
-      generatePDF({
-        template: setupForm.getTemplate(),
-        inputs: setupForm.getInputs()[0]
-      })
-    }
+    renderFormInputs(filter, 'input_render_amanat_persalinan');
   }
 
   document.addEventListener('DOMContentLoaded', function() {
