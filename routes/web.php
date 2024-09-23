@@ -1,7 +1,8 @@
 <?php
 
-use App\Http\Controllers\AmanatPersalinanController;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RujukanController;
@@ -9,10 +10,10 @@ use App\Http\Controllers\PenggunaController;
 use App\Http\Controllers\PosyanduController;
 use App\Http\Controllers\InformasiController;
 use App\Http\Controllers\IdentitasIbuController;
-use App\Http\Controllers\PernyataanPelayananController;
 
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Http\Request;
+use App\Http\Controllers\IdentitasAnakController;
+use App\Http\Controllers\AmanatPersalinanController;
+use App\Http\Controllers\PernyataanPelayananController;
 
 
 /*
@@ -84,7 +85,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard/kelas_ibu_hamil', [InformasiController::class, 'kelasIbuHamil'])->name('kelas_ibu_hamil');
 
     // Routes for CATATAN ANAK
-    Route::get('/dashboard/identitas_anak', [AuthController::class, 'identitasAnak'])->name('identitas_anak');
+    Route::get('/dashboard/identitas_anak', [IdentitasAnakController::class, 'index'])->name('identitas_anak');
     Route::get('/dashboard/pelayanan_neonatus', [AuthController::class, 'pelayananNeonatus'])->name('pelayanan_neonatus');
     Route::get('/dashboard/sdidtk', [AuthController::class, 'sdidtk'])->name('sdidtk');
     Route::get('/dashboard/kurva_pertumbuhan', [AuthController::class, 'kurvaPertumbuhan'])->name('kurva_pertumbuhan');
