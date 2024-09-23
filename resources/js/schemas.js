@@ -1,4 +1,4 @@
-const SCHEME = {
+window.SCHEME = {
   "type": "text",
   "content": " ",
   "position": {
