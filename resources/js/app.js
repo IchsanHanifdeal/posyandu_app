@@ -148,6 +148,7 @@ window.extractDocxBase64 = async (doc, data) => {
     compression: "DEFLATE",
   });
 
+<<<<<<< HEAD
   return base64
 }
 
@@ -166,3 +167,10 @@ window.extractDocxToPdf = async (base64) => {
   let data = await res.json();
   console.log(data);
 }
+=======
+  return {
+    blob: () => blob,
+    url: () => URL.createObjectURL(blob)
+  }
+}
+>>>>>>> 2521160471daccfd1fecf3dffd4038b4f88347c0

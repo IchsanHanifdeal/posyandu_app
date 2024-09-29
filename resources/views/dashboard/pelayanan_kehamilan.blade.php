@@ -10,7 +10,7 @@
                 {{ str_replace('_', ' ', $item) }}
               </h1>
               <div class="flex ml-auto gap-3">
-                <label for="add_data_PELAYANAN_DOKTER_v1" class="btn">Tambah Data v1</label>
+                <label for="add_data_PELAYANAN_DOKTER_v1" onclick="tambahData({{ $items }})" class="btn">Tambah Data v1</label>
                 <label for="add_data_PELAYANAN_DOKTER_v2" class="btn">Tambah Data v2</label>
               </div>
             </div>
@@ -72,4 +72,10 @@
       })
     }
   }
+</script>
+
+<script>
+    function tambahData(items) {
+        console.log(items)
+    }
 </script>
