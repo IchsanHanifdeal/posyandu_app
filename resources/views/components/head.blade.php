@@ -16,6 +16,8 @@
   <meta name="twitter:title" content="....">
   <meta name="twitter:description" content="....">
 
+  <script crossorigin src="https://unpkg.com/jszip/dist/jszip.min.js"></script>
+  <script src="https://volodymyrbaydalka.github.io/docxjs/dist/docx-preview.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/docxtemplater/3.50.0/docxtemplater.js"></script>
   <script src="https://unpkg.com/pizzip@3.1.7/dist/pizzip.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/1.3.8/FileSaver.js"></script>

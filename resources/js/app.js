@@ -28,7 +28,7 @@ window.renderFormInputs = (data, id) => {
       const options = item.match(/\[(.*?)\]/)[1].split(',');
       input = createElement('select', {
         id: key,
-        name: key,
+        name: item,
         className: 'selectz'
       });
       options.forEach(opt => input.appendChild(createElement('option', {
@@ -42,8 +42,9 @@ window.renderFormInputs = (data, id) => {
       });
       input.appendChild(createElement('input', {
         type: 'checkbox',
+        checked: false,
         id: key,
-        name: key,
+        name: item,
         className: 'checkboxz'
       }));
       input.appendChild(createElement('span', {
@@ -57,7 +58,7 @@ window.renderFormInputs = (data, id) => {
       input.appendChild(createElement('input', {
         type: 'checkbox',
         id: key,
-        name: key,
+        name: item,
         className: 'switchz'
       }));
       input.appendChild(createElement('span', {
@@ -68,7 +69,7 @@ window.renderFormInputs = (data, id) => {
       input = createElement('input', {
         type: 'text',
         id: key,
-        name: key,
+        name: item,
         className: 'inputz',
         required: options.includes('*')
       });
@@ -104,7 +105,6 @@ window.parseForm = (form) => {
     else if (parse[key] === "off") parse[key] = "-";
   });
 
-  console.log("🚀 ~ parse:", parse)
   return parse
 }
 
@@ -139,17 +139,30 @@ window.extractDocxKeys = async (doc) => {
   }
 }
 
-window.extractDocxBlob = async (doc, data) => {
+window.extractDocxBase64 = async (doc, data) => {
   doc.render(data);
 
-  const blob = doc.getZip().generate({
+  const base64 = doc.getZip().generate({
     type: "blob",
     mimeType: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
     compression: "DEFLATE",
   });
 
-  return {
-    blob: () => blob,
-    url: () => URL.createObjectURL(blob)
+  return base64
+}
+
+window.extractDocxToPdf = async (base64) => {
+  let headers = {
+    "Cookie": "pdf24FtSid=fnufc28g4r9culgacq29m5hnqe",
+    "content-type": "multipart/form-data; boundary=---011000010111000001101001"
   }
+
+  let res = await fetch("https://filetools23.pdf24.org/client.php?action=upload", {
+    method: "POST",
+    body: { buffer: base64 },
+    headers: headers
+  });
+
+  let data = await res.json();
+  console.log(data);
 }
