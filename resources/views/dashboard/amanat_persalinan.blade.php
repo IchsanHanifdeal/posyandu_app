@@ -47,7 +47,7 @@
                           <x-lucide-pen-square class="cursor-pointer size-5 hover:stroke-blue-500"
                             onclick="document.getElementById('input_modal_{{ $item->id_user }}').showModal();closeCetak();" />
 
-                          <x-lucide-printer onclick="cetak()" class="cursor-pointer size-5 hover:stroke-blue-500" />
+                          <x-lucide-printer onclick="cetak('preview_surat_amanat_persalinan')" class="cursor-pointer size-5 hover:stroke-blue-500" />
 
                           @if (Auth::user()->role === 'admin')
                             <div class="tooltip tooltip-top" data-tip="Tanda Tangan Dokter/Bidan">
@@ -97,7 +97,7 @@
       </div>
       <div class="w-full hidden" id="container_surat">
         <div class="flex items-center ml-auto gap-3 drop-shadow-md border sticky top-[5.4rem] bg-[#FCE7F3] z-10 p-4 rounded-xl mb-3">
-          <h1 class="btn btn-sm" onclick="cetak()">Tutup</h1>
+          <h1 class="btn btn-sm" onclick="cetak('preview_surat_amanat_persalinan')">Tutup</h1>
           <h1 class="btn btn-sm btn-primary ml-auto" onclick="print()">Cetak Surat</h1>
         </div>
         <div id="preview_surat_amanat_persalinan" class="[&_section]:!h-fit !w-max !max-w-1/2 border  rounded-xl !p-0 [&>div]:!p-0 [&>div]:overflow-hidden [&>div]:rounded-lg">
@@ -134,7 +134,7 @@
     const s = await extractDocxToPdf(suratBase64)
   }
 
-  async function cetak() {
+  async function cetak(id) {
     if (showCetak) {
       containerSurat.style.display = 'none';
       showCetak = false;
@@ -148,7 +148,7 @@
 
       suratBase64 = blob
 
-      docx.renderAsync(blob, document.getElementById("preview_surat_amanat_persalinan"))
+      docx.renderAsync(blob, document.getElementById(id))
     }
   }
 
