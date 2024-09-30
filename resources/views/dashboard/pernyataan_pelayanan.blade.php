@@ -27,6 +27,7 @@
                 </thead>
                 <tbody class="capitalize">
                   @forelse ($ibu as $i => $item)
+                  <tr>
                     <th class="font-semibold text-center">{{ $i + 1 }}</th>
                     <td class="text-center">{{ $item->nik }}</td>
                     <td class="font-bold text-center">{{ $item->user->nama }}</td>
@@ -188,8 +189,11 @@
                         </div>
                       </dialog>
                     </td>
+                  </tr>
                   @empty
+                  <tr>
                     <td class="text-center font-gray-700" colspan="5">Tidak ada Data Ibu</td>
+                  </tr>
                   @endif
                 </tbody>
               </table>

@@ -21,8 +21,8 @@ class PosyanduSeeder extends Seeder
             ],
             [
             'nama_posyandu' => 'Pucuk Rebung Bersiku Keluang',
-            'alamat' => 'Sukamulia',
-            'fasilitas' => 'tidak ada'
+            'alamat' => 'Jl. Sukoharjo, RW 5, Kelurahan Sukamulia, Sail, Pekanbaru, Riau',
+            'fasilitas' => 'Timbangan, Infant Scale, Pita Ukur Kepala, Alat ukur tinggi balita, Tensi meter, Termometer, Meja Pelayanan, Ruang Konseling, P3K, Tempat Bermain Anak, Toilet, Sabun Cuci Tangan, Tempat Sampah, Kursi'
             ],
         ]);
     }

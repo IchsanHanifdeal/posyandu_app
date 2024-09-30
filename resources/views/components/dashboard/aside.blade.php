@@ -145,13 +145,13 @@
                         Pelayanan SDIDTK
                     </a>
                 </li>
-                <li>
+                {{-- <li>
                     <a href="{{ route('kurva_pertumbuhan') }}"
                         class="{!! preg_match('#^dashboard/kurva_pertumbuhan.*#', Request::path()) ? 'active' : '' !!} flex items-center px-2.5 font-semibold">
                         <x-lucide-trending-up />
                         Kurva Pertumbuhan
                     </a>
-                </li>
+                </li> --}}
                 <li>
                     <a href="{{ route('imunisasi') }}"
                         class="{!! preg_match('#^dashboard/imunisasi.*#', Request::path()) ? 'active' : '' !!} flex items-center px-2.5 font-semibold">
@@ -159,20 +159,20 @@
                         Imunisasi
                     </a>
                 </li>
-                <li>
+                {{-- <li>
                     <a href="{{ route('vit_a') }}"
                         class="{!! preg_match('#^dashboard/vit_a.*#', Request::path()) ? 'active' : '' !!} flex items-center px-2.5 font-semibold">
                         <x-lucide-pill-bottle />
                         PMBA, Vitamin A, Obat Cacing
                     </a>
-                </li>
-                <li>
+                </li> --}}
+                {{-- <li>
                     <a href="{{ route('ringkasan_pelayanan_mtbs') }}"
                         class="{!! preg_match('#^dashboard/ringkasan_pelayanan_mtbs.*#', Request::path()) ? 'active' : '' !!} flex items-center px-2.5 font-semibold">
                         <x-lucide-file-text />
                         Ringkasan Pelayanan MTBS
                     </a>
-                </li>
+                </li> --}}
                 <li>
                     <a href="{{ route('rujukan_anak') }}"
                         class="{!! preg_match('#^dashboard/rujukan_anak.*#', Request::path()) ? 'active' : '' !!} flex items-center px-2.5 font-semibold">

@@ -13,21 +13,23 @@ return new class extends Migration
     {
         Schema::create('ibu', function (Blueprint $table) {
             $table->id('id_ibu');
+            $table->unsignedBigInteger('id_posyandu');
+            $table->foreign('id_posyandu')->references('id_posyandu')->on('posyandu')->onDelete('cascade')->onUpdate('cascade');
             $table->unsignedBigInteger('id_user');
             $table->foreign('id_user')->references('id_user')->on('users')->onDelete('cascade')->onUpdate('cascade');
             $table->string('nik')->unique();
-            $table->string('no_jkn')->unique();
-            $table->string('faskes_tk_1');
-            $table->string('faskes_rujukan');
-            $table->string('pembiayaan');
-            $table->string('golongan_darah');
-            $table->string('tempat_lahir');
-            $table->date('tanggal_lahir');
-            $table->string('pendidikan');
-            $table->string('pekerjaan');
-            $table->string('alamat');
+            $table->string('no_jkn')->nullable();
+            $table->string('faskes_tk_1')->nullable();
+            $table->string('faskes_rujukan')->nullable();
+            $table->string('pembiayaan')->nullable();
+            $table->string('golongan_darah')->nullable();
+            $table->string('tempat_lahir')->nullable();
+            $table->date('tanggal_lahir')->nullable();
+            $table->string('pendidikan')->nullable();
+            $table->string('pekerjaan')->nullable();
+            $table->string('alamat')->nullable();
             $table->string('puskesmas_domisili');
-            $table->string('no_register_kohort')->unique();
+            $table->string('no_register_kohort')->nullable();
             $table->timestamps();
         });
     }

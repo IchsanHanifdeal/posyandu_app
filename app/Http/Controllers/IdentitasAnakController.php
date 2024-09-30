@@ -12,7 +12,9 @@ class IdentitasAnakController extends Controller
      */
     public function index()
     {
-        //
+        return view('dashboard.identitas_anak', [
+            'anak' => IdentitasAnak::all(),
+        ]);
     }
 
     /**

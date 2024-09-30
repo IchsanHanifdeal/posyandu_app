@@ -3,6 +3,9 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+
+use App\Models\IdentitasAnak;
+use App\Models\Pendamping;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -16,6 +19,9 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             PosyanduSeeder::class,
             PengurusPosyanduSeeder::class,
+            IbuSeeder::class,
+            PendampingSeeder::class,
+            IdentitasAnakSeeder::class,
         ]);
     }
 }
