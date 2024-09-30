@@ -45,7 +45,7 @@
                         <td class="text-center">{{ $item->no_register_kohort }}</td>
                         <td class="flex items-center gap-4">
                           <x-lucide-pen-square class="cursor-pointer size-5 hover:stroke-blue-500"
-                            onclick="document.getElementById('input_modal_{{ $item->id_user }}').showModal();" />
+                            onclick="document.getElementById('input_modal_{{ $item->id_user }}').showModal();closeCetak();" />
 
                           <x-lucide-printer onclick="cetak()" class="cursor-pointer size-5 hover:stroke-blue-500" />
 
@@ -65,7 +65,6 @@
                             </div>
                           @endif
 
-
                           <dialog id="sign_modal_{{ $item->id_user }}" class="modal modal-bottom sm:modal-middle">
                             <div class="modal-box">
                               <h3 class="font-bold text-lg">Tanda Tangan Digital</h3>
@@ -81,7 +80,6 @@
                             </div>
                           </dialog>
                         </td>
-
                       </tr>
                     @empty
                       <tr>
@@ -97,52 +95,22 @@
           </div>
         @endforeach
       </div>
-      <div class="flex-col gap-3 w-full hidden" id="container_surat">
-        <div class="flex items-center ml-auto gap-3 sticky top-[5.4rem] z-10 mr-5">
-          <h1 class="btn btn-sm btn-error text-white">Tutup</h1>
-          <h1 class="btn btn-sm" onclick="closeSurat()">Cetak Surat</h1>
+      <div class="w-full hidden" id="container_surat">
+        <div class="flex items-center ml-auto gap-3 drop-shadow-md border sticky top-[5.4rem] bg-[#FCE7F3] z-10 p-4 rounded-xl mb-3">
+          <h1 class="btn btn-sm" onclick="cetak()">Tutup</h1>
+          <h1 class="btn btn-sm btn-primary ml-auto" onclick="print()">Cetak Surat</h1>
         </div>
-        <div id="preview_surat_amanat_persalinan"
-          class="[&_section]:!h-fit !w-max !max-w-1/2 border rounded-xl !p-0 !aspect-[4/16] [&>div]:!p-0 [&>div]:overflow-hidden [&>div]:rounded-lg">
+        <div id="preview_surat_amanat_persalinan" class="[&_section]:!h-fit !w-max !max-w-1/2 border  rounded-xl !p-0 [&>div]:!p-0 [&>div]:overflow-hidden [&>div]:rounded-lg">
         </div>
       </div>
     </div>
   @endif
 </x-dashboard.main>
 
-<input type="checkbox" id="add_data_AMANAT_PERSALINAN_IBU_v1" class="modal-toggle" />
-<div class="modal" role="dialog" id="AMANAT_PERSALINAN_IBU">
-  <form onsubmit="setupFormGenerate(this, 'AMANAT_PERSALINAN_IBU', 'bkiabi-amanat-kesehatan.pdf')" action="javascript:void();" class="modal-box">
-    <h3 class="text-lg font-bold">Tambah Amanat Persalinan Ibu v1</h3>
-    <div id="container" class="flex flex-col w-full gap-2 mt-5">
-    </div>
-    <div class="modal-action">
-      <label for="add_data_AMANAT_PERSALINAN_IBU_v1" class="btn">Tutup</label>
-      <button type="submit" class="btn btn-primary">Cetak</button>
-    </div>
-  </form>
-</div>
-
-<input type="checkbox" id="add_data_AMANAT_PERSALINAN_IBU_v2" class="modal-toggle" />
-<div class="modal" role="dialog" id="AMANAT_PERSALINAN_IBU">
-  <form onsubmit="generateOutputForm()" action="javascript:void();" class="modal-box">
-    <h3 class="text-lg font-bold">Tambah Amanat Persalinan Ibu v2</h3>
-    <div id="pdf_form_AMANAT_PERSALINAN_IBU" class="w-full mt-5 rounded-lg overflow-hidden">
-    </div>
-    <div class="modal-action">
-      <label for="add_data_AMANAT_PERSALINAN_IBU_v2" class="btn">Tutup</label>
-      <button type="submit" class="btn btn-primary">Cetak</button>
-    </div>
-  </form>
-</div>
-
 <dialog id="input_modal_{{ $item->id_user }}" class="modal modal-bottom sm:modal-middle">
   <form onsubmit="saveData(this)" action="javascript:void();"S class="modal-box">
     <h3 class="text-lg font-bold">Lengkapi Dokumen</h3>
-    <div class="flex flex-col py-4" id="input_render_amanat_persalinan">
-
-    </div>
-
+    <div class="flex flex-col py-4" id="input_render_amanat_persalinan"></div>
     <div class="modal-action">
       <button type="submit" class="btn btn-primary">
         Simpan
@@ -156,16 +124,37 @@
 
 <script>
   let TEMP_STORE;
+  let showCetak = false
+  let suratBase64 = ''
+
   let file = '/docx/bkiabi-amanat-persalinan.docx';
   const containerSurat = document.getElementById('container_surat');
 
+  async function print() {
+    const s = await extractDocxToPdf(suratBase64)
+  }
+
   async function cetak() {
-    containerSurat.style.display = 'block';
-    const data = await extractDocx({
-      file
-    })
-    const base64 = await extractDocxBase64(data, TEMP_STORE)
-    docx.renderAsync(base64, document.getElementById("preview_surat_amanat_persalinan"))
+    if (showCetak) {
+      containerSurat.style.display = 'none';
+      showCetak = false;
+    } else {
+      containerSurat.style.display = 'block';
+      showCetak = true;
+      const data = await extractDocx({
+        file
+      })
+      const blob = await extractDocxBlob(data, TEMP_STORE)
+
+      suratBase64 = blob
+
+      docx.renderAsync(blob, document.getElementById("preview_surat_amanat_persalinan"))
+    }
+  }
+
+  function closeCetak() {
+    containerSurat.style.display = 'none';
+    showCetak = false;
   }
 
   function saveData(form) {
@@ -174,14 +163,7 @@
     showToast('Data tersimpan!', 'success');
   }
 
-  function  () {
-    containerSurat.style.display = 'none';
-  }
-
   document.addEventListener('DOMContentLoaded', async () => {
-
-
-
     const data = await extractDocx({
       file
     })
