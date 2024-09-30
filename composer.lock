@@ -4,11 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-<<<<<<< HEAD
-    "content-hash": "5c5fdb77f45fd2ecbd1919fba0c4ab99",
-=======
-    "content-hash": "4edd19e52b777e7bff365f3c574cb7c1",
->>>>>>> ae53ab83466428972ae4e659b8502d96267c3e7d
+    "content-hash": "91668cccc3ff5183bd183d86535db453",
     "packages": [
         {
             "name": "barryvdh/laravel-dompdf",
@@ -2428,55 +2424,6 @@
                 }
             ],
             "time": "2024-06-28T09:40:51+00:00"
-        },
-        {
-            "name": "ncjoes/office-converter",
-            "version": "v1.0.7",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/ncjoes/office-converter.git",
-                "reference": "aca98bafc17bc4b1e89983bc36ea413768b75198"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/ncjoes/office-converter/zipball/aca98bafc17bc4b1e89983bc36ea413768b75198",
-                "reference": "aca98bafc17bc4b1e89983bc36ea413768b75198",
-                "shasum": ""
-            },
-            "require": {
-                "php": "^7.3|^8.0"
-            },
-            "require-dev": {
-                "friendsofphp/php-cs-fixer": "^2.16",
-                "phpstan/phpstan": "^0.12.11",
-                "phpunit/phpunit": "7.*"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "NcJoes\\OfficeConverter\\": "src/OfficeConverter"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Chukwuemeka Nwobodo",
-                    "email": "jc.nwobodo@gmail.com"
-                }
-            ],
-            "description": "PHP Wrapper for LibreOffice",
-            "keywords": [
-                "converter",
-                "office"
-            ],
-            "support": {
-                "issues": "https://github.com/ncjoes/office-converter/issues",
-                "source": "https://github.com/ncjoes/office-converter/tree/v1.0.7"
-            },
-            "time": "2024-08-23T02:02:38+00:00"
         },
         {
             "name": "nesbot/carbon",

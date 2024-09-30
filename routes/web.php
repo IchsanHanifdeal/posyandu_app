@@ -10,20 +10,11 @@ use App\Http\Controllers\PenggunaController;
 use App\Http\Controllers\PosyanduController;
 use App\Http\Controllers\InformasiController;
 use App\Http\Controllers\IdentitasIbuController;
-<<<<<<< HEAD
-use App\Http\Controllers\PernyataanPelayananController;
-use GuzzleHttp\Client;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Log;
-=======
 
 use App\Http\Controllers\IdentitasAnakController;
 use App\Http\Controllers\AmanatPersalinanController;
 use App\Http\Controllers\PernyataanPelayananController;
 
->>>>>>> ae53ab83466428972ae4e659b8502d96267c3e7d
 
 /*
 |--------------------------------------------------------------------------
@@ -38,16 +29,6 @@ use App\Http\Controllers\PernyataanPelayananController;
 
 Route::get('/', function (Request $request) {
     return view('home.index');
-});
-
-Route::get('/pdf/base64', function (Request $request) {
-    $path = $request->query('path');
-    if (!Storage::exists($path) || !str_starts_with($path, '/')) {
-        return response()->json(['error' => 'Invalid or non-existent file path'], 400);
-    }
-    $base64 =
-        base64_encode(Storage::get($path));
-    return response()->json(['base64' => $base64]);
 });
 
 Route::get('/login', [AuthController::class, 'index'])->name('login');
