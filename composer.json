@@ -12,7 +12,11 @@
         "laravel/sanctum": "^3.2",
         "laravel/tinker": "^2.8",
         "mallardduck/blade-lucide-icons": "^1.23",
+<<<<<<< HEAD
         "ncjoes/office-converter": "^1.0",
+=======
+        "nesbot/carbon": "^2.72",
+>>>>>>> ae53ab83466428972ae4e659b8502d96267c3e7d
         "setasign/fpdi": "^2.6"
     },
     "require-dev": {

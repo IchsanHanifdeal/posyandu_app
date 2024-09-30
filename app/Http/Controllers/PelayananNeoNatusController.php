@@ -2,25 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\IdentitasAnak;
+use App\Models\PelayananNeoNatus;
 use Illuminate\Http\Request;
 
-class IdentitasAnakController extends Controller
+class PelayananNeoNatusController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $anak_terbaru = IdentitasAnak::latest()->first()->nama ?? '-';
-
-        $jumlah_anak = IdentitasAnak::count();
-
-        return view('dashboard.identitas_anak', [
-            'anak' => IdentitasAnak::all(),
-            'Anak_baru_lahir' => $anak_terbaru,
-            'jumlah_anak_terdaftar' => $jumlah_anak,
-        ]);
+        //
     }
 
     /**
@@ -42,7 +34,7 @@ class IdentitasAnakController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(IdentitasAnak $identitasAnak)
+    public function show(PelayananNeoNatus $pelayananNeoNatus)
     {
         //
     }
@@ -50,7 +42,7 @@ class IdentitasAnakController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(IdentitasAnak $identitasAnak)
+    public function edit(PelayananNeoNatus $pelayananNeoNatus)
     {
         //
     }
@@ -58,7 +50,7 @@ class IdentitasAnakController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, IdentitasAnak $identitasAnak)
+    public function update(Request $request, PelayananNeoNatus $pelayananNeoNatus)
     {
         //
     }
@@ -66,7 +58,7 @@ class IdentitasAnakController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(IdentitasAnak $identitasAnak)
+    public function destroy(PelayananNeoNatus $pelayananNeoNatus)
     {
         //
     }
