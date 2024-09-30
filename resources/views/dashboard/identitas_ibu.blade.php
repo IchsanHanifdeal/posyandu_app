@@ -43,8 +43,13 @@
                                     </tr>
                                 </thead>
                                 <tbody class="capitalize">
+<<<<<<< HEAD
                                     <tr>
                                         @forelse ($ibu as $i => $item)
+=======
+                                    @forelse ($ibu as $i => $item)
+                                        <tr>
+>>>>>>> e611f6719488df9697e3b9067f3b1d3988dee1c8
                                             <th class="text-center">{{ $i + 1 }}</th>
                                             <td class="font-semibold text-center capitalize">
                                                 <label for="lihat_modal_{{ $item->id_user }}"
@@ -369,6 +374,7 @@
                                                     </div>
                                                 </dialog>
                                             </td>
+<<<<<<< HEAD
                                     </tr>
                                 @empty
                                     <td colspan="7" class="text-center text-gray-700">Tidak ada Data Ibu</td>
@@ -381,5 +387,19 @@
     @endforeach
     </div>
 @else
+=======
+                                        </tr>
+                                    @empty
+                                        <td colspan="7" class="text-center text-gray-700">Tidak ada Data Ibu</td>
+                                    @endforelse
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            @endforeach
+        </div>
+    @else
+>>>>>>> e611f6719488df9697e3b9067f3b1d3988dee1c8
     @endif
 </x-dashboard.main>

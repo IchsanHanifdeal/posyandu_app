@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class IdentitasAnak extends Model
 {
     use HasFactory;
-    protected $table = "IdentitasAnak";
+    protected $table = "identitas_Anak";
     protected $primaryKey = "id_anak";
     protected $fillable = [
         'id_ibu',
@@ -30,4 +30,9 @@ class IdentitasAnak extends Model
         'ttd_penolong_persalinan',
         'nama_penolong_persalinan',
     ];
+
+    public function ibu()
+    {
+        return $this->belongsTo(Ibu::class, 'id_ibu', 'id_ibu');
+    }
 }

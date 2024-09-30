@@ -79,6 +79,10 @@
                                         </tr>
                                     @empty
                                         <tr>
+<<<<<<< HEAD
+=======
+
+>>>>>>> e611f6719488df9697e3b9067f3b1d3988dee1c8
                                             <td colspan="14" class="text-gray-500 text-center">Tidak Ada Anak
                                                 Terdaftar
                                             </td>

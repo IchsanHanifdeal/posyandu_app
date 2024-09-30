@@ -33,7 +33,7 @@
                 <span class="label text-xs font-extrabold opacity-50">CATATAN IBU</span>
                 <li>
                     <a href="{{ route('identitas_ibu_hamil') }}"
-                        class="{!! preg_match('#^dashboard/identitas.*#', Request::path()) ? 'active' : '' !!} flex items-center px-2.5 font-semibold">
+                        class="{!! preg_match('#^dashboard/identitas_ibu_hamil.*#', Request::path()) ? 'active' : '' !!} flex items-center px-2.5 font-semibold">
                         <x-lucide-user-check />
                         Identitas Ibu Hamil
                     </a>
