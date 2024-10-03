@@ -40,6 +40,7 @@ return new class extends Migration
             $table->string('persetujuan_pendamping')->nullable();
             $table->string('persetujuan_ibu')->nullable();
             $table->string('persetujuan_dokter')->nullable();
+            $table->timestamps();
         });
     }
 

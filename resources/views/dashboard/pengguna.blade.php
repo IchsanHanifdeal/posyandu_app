@@ -199,7 +199,7 @@
         <form action="{{ route('store.pengguna') }}" method="POST">
             @csrf
             <div class="grid sm:grid-cols-1 xl:grid-cols-1 gap-5 md:gap-6">
-                @foreach ([['label' => 'Nama', 'type' => 'text'], ['label' => 'No Handphone', 'type' => 'number']] as $field)
+                @foreach ([['label' => 'Nama', 'type' => 'text'], ['label' => 'No Handphone', 'type' => 'number'], ['label' => 'Password', 'type' => 'password']] as $field)
                     <div>
                         <label for="{{ strtolower(str_replace(' ', '_', $field['label'])) }}"
                             class="block mb-2 text-sm font-medium text-gray-900 dark:text-white capitalize">

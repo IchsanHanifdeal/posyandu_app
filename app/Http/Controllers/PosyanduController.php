@@ -42,7 +42,26 @@ class PosyanduController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validatedData = $request->validate([
+            'nama_posyandu' => 'required|string|max:255',
+            'alamat' => 'required|string|max:255',
+            'fasilitas' => 'required|string|max:255',
+            'pengurus' => 'array'
+        ]);
+
+        $posyandu = Posyandu::create($validatedData);
+
+        if ($request->has('pengurus')) {
+            $posyandu->users()->attach($request->pengurus);
+        }
+
+        return redirect()->back()->with(
+            'toast',
+            [
+                'type' => 'success',
+                'message' => 'Posyandu berhasil didaftarkan!'
+            ]
+        );
     }
 
     /**
@@ -64,16 +83,46 @@ class PosyanduController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Posyandu $posyandu)
+    public function update(Request $request, Posyandu $id_posyandu)
     {
-        //
+        $validatedData = $request->validate([
+            'nama_posyandu' => 'required|string|max:255',
+            'alamat' => 'required|string|max:255',
+            'fasilitas' => 'required|string|max:255',
+            'pengurus' => 'array',
+        ]);
+
+        // Update data posyandu
+        $id_posyandu->update($validatedData);
+
+        // Sync pengurus (update hubungan many-to-many)
+        if ($request->has('pengurus')) {
+            $id_posyandu->users()->sync($request->pengurus);
+        }
+
+        // Redirect kembali dengan toast notification
+        return redirect()->back()->with(
+            'toast',
+            [
+                'type' => 'success',
+                'message' => 'Data Posyandu berhasil diperbarui!'
+            ]
+        );
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Posyandu $posyandu)
+    public function destroy(Posyandu $id_posyandu)
     {
-        //
+        $id_posyandu->delete();
+
+        return redirect()->back()->with(
+            'toast',
+            [
+                'type' => 'success',
+                'message' => 'Posyandu berhasil dihapus!'
+            ]
+        );
     }
 }
