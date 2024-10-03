@@ -41,6 +41,9 @@
         <button type="submit" class="btn btn-primary">
           Simpan
         </button>
+        <button type="submit" class="btn btn-accent">
+          Cetak
+        </button>
         <button class="btn" type="button" onclick="document.getElementById(`add_data_{{ str_replace(' ', '_', $item) }}`).close();">
           Tutup
         </button>
