@@ -14,21 +14,21 @@
                 </a>
             </li>
             @if (Auth::user()->role === 'super_admin')
-            <span class="label text-xs font-extrabold opacity-50">MAIN DATA</span>
-            <li>
-                <a href="{{ route('posyandu') }}"
-                    class="{!! Request::path() == 'dashboard/posyandu' ? 'active' : '' !!} flex items-center px-2.5 font-semibold">
-                    <x-lucide-house-plus />
-                    Data Posyandu
-                </a>
-            </li>
-            <li>
-                <a href="{{ route('pengguna') }}"
-                    class="{!! Request::path() == 'dashboard/pengguna' ? 'active' : '' !!} flex items-center px-2.5 font-semibold">
-                    <x-lucide-users />
-                    Data Pengguna
-                </a>
-            </li>
+                <span class="label text-xs font-extrabold opacity-50">MAIN DATA</span>
+                <li>
+                    <a href="{{ route('posyandu') }}"
+                        class="{!! Request::path() == 'dashboard/posyandu' ? 'active' : '' !!} flex items-center px-2.5 font-semibold">
+                        <x-lucide-house-plus />
+                        Data Posyandu
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('pengguna') }}"
+                        class="{!! Request::path() == 'dashboard/pengguna' ? 'active' : '' !!} flex items-center px-2.5 font-semibold">
+                        <x-lucide-users />
+                        Data Pengguna
+                    </a>
+                </li>
             @elseif (Auth::user()->role === 'admin' || Auth::user()->role === 'user')
                 <span class="label text-xs font-extrabold opacity-50">CATATAN IBU</span>
                 <li>
@@ -132,19 +132,26 @@
                     </a>
                 </li>
                 <li>
+                    <a href="{{ route('perkembangan_anak') }}"
+                        class="{!! preg_match('#^dashboard/perkembangan_anak.*#', Request::path()) ? 'active' : '' !!} flex items-center px-2.5 font-semibold">
+                        <x-lucide-trending-up />
+                        Perkembangan Anak
+                    </a>
+                </li>
+                <li>
                     <a href="{{ route('pelayanan_neonatus') }}"
                         class="{!! preg_match('#^dashboard/pelayanan_neonatus.*#', Request::path()) ? 'active' : '' !!} flex items-center px-2.5 font-semibold">
                         <x-lucide-baby />
                         Pelayanan Kesehatan Neonatus
                     </a>
                 </li>
-                <li>
+                {{-- <li>
                     <a href="{{ route('sdidtk') }}"
                         class="{!! preg_match('#^dashboard/sdidtk.*#', Request::path()) ? 'active' : '' !!} flex items-center px-2.5 font-semibold">
                         <x-lucide-check-square />
                         Pelayanan SDIDTK
                     </a>
-                </li>
+                </li> --}}
                 {{-- <li>
                     <a href="{{ route('kurva_pertumbuhan') }}"
                         class="{!! preg_match('#^dashboard/kurva_pertumbuhan.*#', Request::path()) ? 'active' : '' !!} flex items-center px-2.5 font-semibold">
@@ -173,13 +180,13 @@
                         Ringkasan Pelayanan MTBS
                     </a>
                 </li> --}}
-                <li>
+                {{-- <li>
                     <a href="{{ route('rujukan_anak') }}"
                         class="{!! preg_match('#^dashboard/rujukan_anak.*#', Request::path()) ? 'active' : '' !!} flex items-center px-2.5 font-semibold">
                         <x-lucide-link />
                         Rujukan Anak
                     </a>
-                </li>
+                </li> --}}
                 <span class="label text-xs font-extrabold opacity-50">INFORMASI ANAK</span>
                 <li>
                     <a href="{{ route('bayi_baru_lahir') }}"
@@ -230,13 +237,13 @@
                         Anak 5 - 6 Tahun
                     </a>
                 </li>
-                <li>
+                {{-- <li>
                     <a href="{{ route('kelas_ibu_balita') }}"
                         class="{!! preg_match('#^dashboard/kelas_ibu_balita.*#', Request::path()) ? 'active' : '' !!} flex items-center px-2.5 font-semibold">
                         <x-lucide-book />
                         Kelas Ibu Balita
                     </a>
-                </li>
+                </li> --}}
         </div>
         @endif
         <div class="flex flex-col">

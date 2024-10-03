@@ -19,6 +19,7 @@ class User extends Authenticatable
         'nama',
         'no_hp',
         'password',
+        'role',
     ];
 
     /**
@@ -43,5 +44,10 @@ class User extends Authenticatable
     public function posyandu()
     {
         return $this->belongsToMany(Posyandu::class, 'pengurus_posyandu', 'id_user', 'id_posyandu');
+    }
+
+    public function ibu()
+    {
+        return $this->hasOne(Ibu::class, 'id_user', 'id_user');
     }
 }

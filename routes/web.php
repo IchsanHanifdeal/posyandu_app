@@ -13,6 +13,7 @@ use App\Http\Controllers\IdentitasIbuController;
 
 use App\Http\Controllers\IdentitasAnakController;
 use App\Http\Controllers\AmanatPersalinanController;
+use App\Http\Controllers\PerkembanganAnakController;
 use App\Http\Controllers\PernyataanPelayananController;
 
 
@@ -67,6 +68,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard/pernyataan_pelayanan', [PernyataanPelayananController::class, 'index'])->name('pernyataan_pelayanan');
 
     Route::get('/dashboard/amanat_persalinan', [AmanatPersalinanController::class, 'index'])->name('amanat_persalinan');
+    Route::post('/dashboard/amanat_persalinan', [AmanatPersalinanController::class, 'store'])->name('amanat.store');
+    Route::put('/dashboard/amanat_persalinan/{id_amanat}', [AmanatPersalinanController::class, 'update'])->name('amanat.update');
 
     Route::get('/maternity-plan/download', [AmanatPersalinanController::class, 'downloadPdf'])->name('print.amanat_persalinan');
 
@@ -90,6 +93,13 @@ Route::middleware(['auth'])->group(function () {
 
     // Routes for CATATAN ANAK
     Route::get('/dashboard/identitas_anak', [IdentitasAnakController::class, 'index'])->name('identitas_anak');
+    Route::post('/dashboard/identitas_anak/post', [IdentitasAnakController::class, 'store'])->name('store.anak');
+    Route::put('/dashboard/identitas_anak/{id_anak}/update', [IdentitasAnakController::class, 'update'])->name('update.anak');
+    Route::delete('/dashboard/identitas_anak/{id_anak}/delete', [IdentitasAnakController::class, 'destroy'])->name('delete.anak');
+
+    Route::get('/dashboard/perkembangan_anak', [PerkembanganAnakController::class, 'index'])->name('perkembangan_anak');
+    Route::post('/dashboard/perkembangan_anak/store', [PerkembanganAnakController::class, 'store'])->name('store.perkembangan');
+
     Route::get('/dashboard/pelayanan_neonatus', [AuthController::class, 'pelayananNeonatus'])->name('pelayanan_neonatus');
     Route::get('/dashboard/sdidtk', [AuthController::class, 'sdidtk'])->name('sdidtk');
     Route::get('/dashboard/kurva_pertumbuhan', [AuthController::class, 'kurvaPertumbuhan'])->name('kurva_pertumbuhan');

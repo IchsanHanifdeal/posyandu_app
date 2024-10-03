@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 
 class PenggunaController extends Controller
 {
@@ -38,15 +40,52 @@ class PenggunaController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'nama' => 'required|string|max:255',
+            'no_handphone' => 'required|numeric',
+            'password' => 'required|string|min:8',
+            'role' => 'required|string',
+        ]);
+
+        User::create([
+            'nama' => $validated['nama'],
+            'no_hp' => $validated['no_handphone'],
+            'password' => Hash::make($validated['password']),
+            'role' => $validated['role'],
+        ]);
+
+        return redirect()->back()->with('toast', [
+            'type' => 'success',
+            'message' => 'Pengguna berhasil ditambahkan!'
+        ]);
     }
+
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function update_photo(Request $request, $id_user)
     {
-        //
+        $user = User::findOrFail($id_user);
+
+        if ($request->hasFile('foto_profil')) {
+            $path = $request->file('foto_profil')->store('foto_profil', 'public');
+
+            // Hapus foto lama jika ada
+            if ($user->foto_profil) {
+                Storage::disk('public')->delete('foto_profil/' . $user->foto_profil);
+            }
+
+            $user->update(['foto_profil' => basename($path)]);
+        }
+
+        return redirect()->back()->with(
+            'toast',
+            [
+                'type' => 'success',
+                'message' => 'Foto profil berhasil diperbarui!'
+            ]
+        );
     }
 
     /**
@@ -68,8 +107,23 @@ class PenggunaController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(string $id_user)
     {
-        //
+        $user = User::findOrFail($id_user);
+
+        // Hapus foto profil jika ada
+        if ($user->foto_profil) {
+            Storage::disk('public')->delete('foto_profil/' . $user->foto_profil);
+        }
+
+        $user->delete();
+
+        return redirect()->back()->with(
+            'toast',
+            [
+                'type' => 'success',
+                'message' => 'Pengguna berhasil dihapus!'
+            ]
+        );
     }
 }

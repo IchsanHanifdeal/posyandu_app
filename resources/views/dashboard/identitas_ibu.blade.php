@@ -43,13 +43,8 @@
                                     </tr>
                                 </thead>
                                 <tbody class="capitalize">
-<<<<<<< HEAD
-                                    <tr>
-                                        @forelse ($ibu as $i => $item)
-=======
                                     @forelse ($ibu as $i => $item)
                                         <tr>
->>>>>>> e611f6719488df9697e3b9067f3b1d3988dee1c8
                                             <th class="text-center">{{ $i + 1 }}</th>
                                             <td class="font-semibold text-center capitalize">
                                                 <label for="lihat_modal_{{ $item->id_user }}"
@@ -66,18 +61,17 @@
                                                         </h3>
                                                         <div
                                                             class="flex flex-col w-full gap-3 !h-full mt-3 rounded-lg overflow-hidden">
-                                                            @php
-                                                                $imagePath = $item->foto_profil
-                                                                    ? asset(
-                                                                        'storage/foto_profil/' .
-                                                                            $item->user->foto_profil,
-                                                                    )
-                                                                    : 'https://ui-avatars.com/api/?name=' .
-                                                                        urlencode($item->user->nama);
-                                                            @endphp
-                                                            <img id="foto_profil_preview_{{ $item->id_user }}"
-                                                                src="{{ $imagePath }}" class="border size-full"
-                                                                alt="Profile Picture">
+                                                            @if ($item->user->foto_profil === null)
+                                                                <img id="foto_profil_preview_{{ $item->id_user }}"
+                                                                    src="https://ui-avatars.com/api/?name={{ urlencode($item->user->nama) }}"
+                                                                    class="border size-full"
+                                                                    alt="{{ $item->user->nama }}">
+                                                            @else
+                                                                <img id="foto_profil_preview_{{ $item->id_user }}"
+                                                                    src="{{ asset('storage/foto_profil/' . $item->user->foto_profil) }}"
+                                                                    class="border size-full"
+                                                                    alt="{{ $item->user->nama }}">
+                                                            @endif
 
                                                             <form action="{{ route('photo.update', $item->id_user) }}"
                                                                 method="POST" enctype="multipart/form-data">
@@ -166,17 +160,19 @@
                                                         </div>
 
                                                         <div class="flex justify-center mb-6">
-                                                            @php
-                                                                $imagePath = $item->foto_profil
-                                                                    ? asset('storage/foto_profil/' . $item->foto_profil)
-                                                                    : 'https://ui-avatars.com/api/?name=' .
-                                                                        urlencode($item->user->nama);
-                                                            @endphp
                                                             <div
                                                                 class="w-40 h-40 overflow-hidden bg-pink-100 border-4 border-pink-300 rounded-full shadow-lg">
-                                                                <img id="foto_profil_preview_{{ $item->id_user }}"
-                                                                    src="{{ $imagePath }}" alt="Profile Picture"
-                                                                    class="object-cover w-full h-full">
+                                                                @if ($item->user->foto_profil === null)
+                                                                    <img id="foto_profil_preview_{{ $item->id_user }}"
+                                                                        src="https://ui-avatars.com/api/?name={{ urlencode($item->user->nama) }}"
+                                                                        class="object-cover w-full h-full"
+                                                                        alt="{{ $item->user->nama }}">
+                                                                @else
+                                                                    <img id="foto_profil_preview_{{ $item->id_user }}"
+                                                                        src="{{ asset('storage/foto_profil/' . $item->user->foto_profil) }}"
+                                                                        class="object-cover w-full h-full"
+                                                                        alt="{{ $item->user->nama }}">
+                                                                @endif
                                                             </div>
                                                         </div>
 
@@ -374,20 +370,6 @@
                                                     </div>
                                                 </dialog>
                                             </td>
-<<<<<<< HEAD
-                                    </tr>
-                                @empty
-                                    <td colspan="7" class="text-center text-gray-700">Tidak ada Data Ibu</td>
-            @endforelse
-            </tbody>
-            </table>
-        </div>
-        </div>
-        </div>
-    @endforeach
-    </div>
-@else
-=======
                                         </tr>
                                     @empty
                                         <td colspan="7" class="text-center text-gray-700">Tidak ada Data Ibu</td>
@@ -400,6 +382,5 @@
             @endforeach
         </div>
     @else
->>>>>>> e611f6719488df9697e3b9067f3b1d3988dee1c8
     @endif
 </x-dashboard.main>
