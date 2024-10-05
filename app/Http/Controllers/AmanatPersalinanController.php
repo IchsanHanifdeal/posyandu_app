@@ -6,11 +6,19 @@ use App\Models\Ibu;
 use App\Models\Amanat;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\PDF;
+use Illuminate\Support\Facades\Auth;
 
 class AmanatPersalinanController extends Controller
 {
     public function index()
     {
+        if (Auth::user()->role === 'user') {
+            $ibu = Auth::user()->ibu;
+            return view('dashboard.amanat_persalinan', [
+                'ibu' => collect([$ibu]),
+            ]);
+        }
+
         return view('dashboard.amanat_persalinan', [
             'ibu' => Ibu::all(),
             'amanat' => Amanat::all(),

@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\IdentitasAnak;
 use App\Models\PerkembanganAnak;
+use Illuminate\Support\Facades\Auth;
 
 class PerkembanganAnakController extends Controller
 {
@@ -15,11 +16,27 @@ class PerkembanganAnakController extends Controller
      */
     public function index()
     {
+        if (Auth::user()->role === 'user') {
+            $ibu = Auth::user()->ibu; 
+        
+            if ($ibu) {
+                $anaks = $ibu->identitas_anak; 
+                
+                $pemeriksaan = PerkembanganAnak::whereIn('id_ibu', $anaks->pluck('id_ibu'))->get();
+            } else {
+                $anaks = collect();
+                $pemeriksaan = collect();
+            }
+        } else {
+            $anaks = IdentitasAnak::all();
+            $pemeriksaan = PerkembanganAnak::all();
+        }
+        
         return view('dashboard.perkembangan_anak', [
-            'pemeriksaan' => PerkembanganAnak::all(),
-            'users' => Ibu::all(),
-            'anaks' => IdentitasAnak::all(),
-        ]);
+            'pemeriksaan' => $pemeriksaan, // Display pemeriksaan anak data
+            'users' => Ibu::all(), // Get all ibu records for admin/other roles
+            'anaks' => $anaks, // Display anak data based on the role
+        ]);        
     }
 
     /**
@@ -103,8 +120,26 @@ class PerkembanganAnakController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(PerkembanganAnak $perkembanganAnak)
+    public function destroy($id)
     {
-        //
+        try {
+            // Temukan data perkembangan anak berdasarkan ID
+            $perkembanganAnak = PerkembanganAnak::findOrFail($id);
+
+            // Hapus data perkembangan anak
+            $perkembanganAnak->delete();
+
+            // Redirect dengan notifikasi toast sukses
+            return redirect()->back()->with('toast', [
+                'type' => 'success',
+                'message' => 'Data perkembangan anak berhasil dihapus!'
+            ]);
+        } catch (\Exception $e) {
+            // Jika terjadi kesalahan, redirect kembali dengan notifikasi toast error
+            return redirect()->back()->with('toast', [
+                'type' => 'error',
+                'message' => 'Terjadi kesalahan saat menghapus data perkembangan anak!'
+            ]);
+        }
     }
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Ibu;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class IdentitasIbuController extends Controller
 {
@@ -12,16 +13,29 @@ class IdentitasIbuController extends Controller
      */
     public function index()
     {
+        if (Auth::user()->role === 'user') {
+            $ibu = Auth::user()->ibu;
+    
+            $ibu_terbaru = $ibu ? $ibu->user->nama : '-';
+            $jumlah_ibu = $ibu ? 1 : 0; // Only one ibu if the user has a related Ibu
+    
+            return view('dashboard.identitas_ibu', [
+                'ibu' => collect([$ibu]), // Wrap single Ibu in a collection
+                'jumlah_ibu' => $jumlah_ibu,
+                'ibu_terbaru' => $ibu_terbaru,
+            ]);
+        }
+    
         $ibu_terbaru = Ibu::latest()->first()->user->nama ?? '-';
-
         $jumlah_ibu = Ibu::count();
-
+    
         return view('dashboard.identitas_ibu', [
             'ibu' => Ibu::all(),
             'jumlah_ibu' => $jumlah_ibu,
             'ibu_terbaru' => $ibu_terbaru,
         ]);
     }
+    
 
     /**
      * Show the form for creating a new resource.

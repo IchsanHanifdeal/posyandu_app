@@ -99,6 +99,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/dashboard/perkembangan_anak', [PerkembanganAnakController::class, 'index'])->name('perkembangan_anak');
     Route::post('/dashboard/perkembangan_anak/store', [PerkembanganAnakController::class, 'store'])->name('store.perkembangan');
+    Route::delete('/dashboard/perkembangan_anak/{id}/delete', [PerkembanganAnakController::class, 'destroy'])->name('delete.perkembangan');
 
     Route::get('/dashboard/pelayanan_neonatus', [AuthController::class, 'pelayananNeonatus'])->name('pelayanan_neonatus');
     Route::get('/dashboard/sdidtk', [AuthController::class, 'sdidtk'])->name('sdidtk');

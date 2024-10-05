@@ -54,7 +54,8 @@
                                         $status_gizi = 'Data tidak lengkap';
 
                                         // Perhitungan status gizi berdasarkan BB/U (Berat Badan menurut Umur)
-                                        if ($usia_bulan <= 60) {
+                                        if ($usia_bulan <= 60 && $berat_saat_ini > 0 && $tinggi_saat_ini > 0) {
+                                            // Ensure non-zero values
                                             // BB/U
                                             if ($berat_saat_ini < -3) {
                                                 $status_gizi = 'Berat badan sangat kurang (Severely Underweight)';
@@ -123,8 +124,9 @@
                                                 $status_gizi = 'Obesitas (Obese)';
                                             }
                                         } else {
-                                            // Jika usia anak lebih dari 60 bulan
-                                            $status_gizi = 'Z-Score tidak tersedia untuk usia > 60 bulan';
+                                            // Jika usia anak lebih dari 60 bulan atau data tidak lengkap
+                                            $status_gizi =
+                                                'Z-Score tidak tersedia untuk usia > 60 bulan atau data tidak lengkap';
                                         }
                                     @endphp
 
@@ -135,7 +137,7 @@
                                         <td class="font-semibold capitalize text-center">{{ $item->anak->tanggal }}</td>
                                         <td class="font-semibold capitalize text-center">{{ $berat_lahir }}</td>
                                         <td class="font-semibold capitalize text-center">
-                                            {{ $item->ibu->pendamping->nama }}</td>
+                                            {{ $item->ibu->pendamping->nama ?? '-' }}</td>
                                         <td class="font-semibold capitalize text-center">{{ $item->ibu->user->nama }}
                                         </td>
                                         <td class="font-semibold capitalize text-center">{{ $tinggi_saat_ini }}</td>
@@ -149,6 +151,40 @@
                                         <td class="font-semibold capitalize text-center">{{ $item->catatan ?? '-' }}
                                         </td>
                                         <td class="font-semibold capitalize text-center">{{ $status_gizi }}</td>
+                                        <td class="flex items-center gap-4">
+                                            <x-lucide-trash class="size-5 hover:stroke-red-500 cursor-pointer"
+                                                onclick="document.getElementById('hapus_modal_{{ $item->id }}').showModal();" />
+                                            <dialog id="hapus_modal_{{ $item->id }}"
+                                                class="modal modal-bottom sm:modal-middle">
+                                                <div class="modal-box bg-base-100">
+                                                    <h3 class="text-lg font-bold capitalize">Hapus
+                                                        {{ $item->anak->nama }}
+                                                    </h3>
+                                                    <div class="mt-3">
+                                                        <p class="text-red-800 font-semibold">Perhatian! Anda
+                                                            sedang
+                                                            mencoba untuk menghapus data anak
+                                                            <strong
+                                                                class="text-red-800 font-bold">{{ $item->anak->nama }}</strong>.
+                                                            <span class="text-black">Tindakan ini akan menghapus
+                                                                semua data terkait. Apakah Anda yakin ingin
+                                                                melanjutkan?</span>
+                                                        </p>
+                                                    </div>
+                                                    <div class="modal-action">
+                                                        <button type="button"
+                                                            onclick="document.getElementById('hapus_modal_{{ $item->id }}').close()"
+                                                            class="btn">Batal</button>
+                                                        <form action="{{ route('delete.perkembangan', $item->id) }}"
+                                                            method="POST" class="inline-block">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button type="submit" class="btn btn-danger">Hapus</button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </dialog>
+                                        </td>
                                     </tr>
                                 @endforeach
                             </tbody>

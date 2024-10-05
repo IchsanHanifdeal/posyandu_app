@@ -35,7 +35,7 @@
                     <a href="{{ route('identitas_ibu_hamil') }}"
                         class="{!! preg_match('#^dashboard/identitas_ibu_hamil.*#', Request::path()) ? 'active' : '' !!} flex items-center px-2.5 font-semibold">
                         <x-lucide-user-check />
-                        Identitas Ibu Hamil
+                        Identitas Ibu 
                     </a>
                 </li>
                 <li>
@@ -59,13 +59,13 @@
                         Pelayanan Dokter
                     </a>
                 </li>
-                <li>
+                {{-- <li>
                     <a href="{{ route('pelayanan_kehamilan') }}"
                         class="{!! preg_match('#^dashboard/pelayanan_kehamilan.*#', Request::path()) ? 'active' : '' !!} flex items-center px-2.5 font-semibold">
                         <x-lucide-heart />
                         Pelayanan Kehamilan
                     </a>
-                </li>
+                </li> --}}
                 <li>
                     <a href="{{ route('pelayanan_nifas') }}"
                         class="{!! preg_match('#^dashboard/pelayanan_nifas.*#', Request::path()) ? 'active' : '' !!} flex items-center px-2.5 font-semibold">

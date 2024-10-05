@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Carbon\Carbon;
 use App\Models\Ibu;
 use App\Models\User;
+use App\Models\Posyandu;
 use App\Models\Pendamping;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -37,7 +38,9 @@ class AuthController extends Controller
 	 */
 	public function create()
 	{
-		return view('auth.register');
+		return view('auth.register', [
+			'posyandu' => Posyandu::all(),
+		]);
 	}
 
 	/**
@@ -47,17 +50,18 @@ class AuthController extends Controller
 	{
 		$rules = [
 			'nama_ibu' => 'required|string|max:255',
-			'nik_ibu' => 'required|string|unique:ibu,nik',
-			'nomor_jkn_ibu' => 'required|string|unique:ibu,no_jkn',
-			'faskes_tk_1_ibu' => 'required|string|max:255',
-			'faskes_rujukan_ibu' => 'required|string|max:255',
-			'pembiayaan_ibu' => 'required|string|max:255',
-			'golongan_darah_ibu' => 'required|string|max:10',
-			'tempat_lahir_ibu' => 'required|string|max:255',
-			'tanggal_lahir_ibu' => 'required|date',
-			'pendidikan_ibu' => 'required|string|max:255',
-			'pekerjaan_ibu' => 'required|string|max:255',
-			'alamat_rumah_ibu' => 'required|string|max:255',
+			'id_posyandu' => 'required|string|max:255',
+			'nik_ibu' => 'nullable|string|unique:ibu,nik',
+			'nomor_jkn_ibu' => 'nullable|string|unique:ibu,no_jkn',
+			'faskes_tk_1_ibu' => 'nullable|string|max:255',
+			'faskes_rujukan_ibu' => 'nullable|string|max:255',
+			'pembiayaan_ibu' => 'nullable|string|max:255',
+			'golongan_darah_ibu' => 'nullable|string|max:10',
+			'tempat_lahir_ibu' => 'nullable|string|max:255',
+			'tanggal_lahir_ibu' => 'nullable|date',
+			'pendidikan_ibu' => 'nullable|string|max:255',
+			'pekerjaan_ibu' => 'nullable|string|max:255',
+			'alamat_rumah_ibu' => 'nullable|string|max:255',
 			'no_handphone_ibu' => 'required|numeric|unique:users,no_hp',
 
 			'nama_suami' => 'nullable|string|max:255',
@@ -140,6 +144,7 @@ class AuthController extends Controller
 				'alamat' => $request->input('alamat_rumah_ibu'),
 				'puskesmas_domisili' => $request->input('puskesmas_domisili'),
 				'no_register_kohort' => $request->input('no_register_kohort_ibu'),
+				'id_posyandu' => $request->input('id_posyandu'),
 			]);
 
 			// Create Pendamping if provided

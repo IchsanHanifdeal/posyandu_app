@@ -6,6 +6,7 @@ use App\Models\Ibu;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\IdentitasAnak;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class IdentitasAnakController extends Controller
@@ -15,17 +16,37 @@ class IdentitasAnakController extends Controller
      */
     public function index()
     {
-        $anak_terbaru = IdentitasAnak::latest()->first()->nama ?? '-';
+        // Check if the authenticated user is a 'user' role
+        if (Auth::user()->role === 'user') {
+            // Get the authenticated user's associated 'ibu' record
+            $ibu = Auth::user()->ibu;
 
-        $jumlah_anak = IdentitasAnak::count();
+            if ($ibu) {
+                // Fetch all 'anak' (children) records related to this 'ibu'
+                $anak = $ibu->identitas_anak;
+            } else {
+                // If no 'ibu' is found, set empty values
+                $anak = collect(); // Empty collection
+            }
 
-        return view('dashboard.identitas_anak', [
-            'anak' => IdentitasAnak::all(),
-            'Anak_baru_lahir' => $anak_terbaru,
-            'jumlah_anak_terdaftar' => $jumlah_anak,
-            'users' => Ibu::all(),
-        ]);
+            return view('dashboard.identitas_anak', [
+                'anak' => $anak, // Only display anak related to the user
+                'users' => collect([$ibu]), // Single ibu, if available
+            ]);
+        } else {
+            // For admin or other roles, retrieve all 'anak' and ibu records
+            $anak_terbaru = IdentitasAnak::latest()->first()->nama ?? '-'; // Get latest anak or default '-'
+            $jumlah_anak = IdentitasAnak::count(); // Count total anak
+
+            return view('dashboard.identitas_anak', [
+                'anak' => IdentitasAnak::all(), // Display all anak records
+                'Anak_baru_lahir' => $anak_terbaru, // Display latest born child
+                'jumlah_anak_terdaftar' => $jumlah_anak, // Display count of anak
+                'users' => Ibu::all(), // Get all ibu records for admin or other roles
+            ]);
+        }
     }
+
 
     /**
      * Show the form for creating a new resource.

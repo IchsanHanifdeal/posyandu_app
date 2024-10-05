@@ -1,27 +1,21 @@
 <x-dashboard.main title="Myposyandu">
     <div class="hero min-h-screen bg-gradient-to-br from-[#fff9fe] via-[#fce8fc] to-[#f5d4f5] relative overflow-hidden">
         <!-- Decorative Circles for Large Screens -->
-        <div
-            class="hidden lg:block absolute top-0 right-0 bg-pink-200 rounded-full w-64 h-64 opacity-30 transform translate-x-1/2 -translate-y-1/2">
-        </div>
-        <div
-            class="hidden lg:block absolute bottom-0 left-0 bg-purple-200 rounded-full w-48 h-48 opacity-40 transform -translate-x-1/2 translate-y-1/2">
-        </div>
-
-        <div
-            class="hero-content flex flex-col lg:flex-row-reverse items-center justify-center h-full relative z-10 px-6 lg:px-16">
+        <div class="hidden lg:block absolute top-0 right-0 bg-pink-200 rounded-full w-64 h-64 opacity-30 transform translate-x-1/2 -translate-y-1/2"></div>
+        
+        <div class="hidden lg:block absolute bottom-0 left-0 bg-purple-200 rounded-full w-48 h-48 opacity-40 transform -translate-x-1/2 translate-y-1/2"></div>
+    
+        <div class="hero-content flex flex-col lg:flex-row-reverse items-center justify-center h-full relative z-10 px-6 sm:px-8 md:px-10 lg:px-16">
             <img src="{{ asset('images/hero.png') }}"
-                class="max-w-sm rounded-lg transform hover:scale-105 transition-transform duration-300 mb-8 lg:mb-0"
+                class="w-1/4 h-auto rounded-lg transform hover:scale-105 transition-transform duration-300 mb-8"
                 alt="MyPosyandu Image" />
             <div class="text-center lg:text-left lg:mr-10">
-                <h1 class="text-5xl font-extrabold mb-4 text-purple-800">MyPosyandu</h1>
-                <p class="py-6 text-lg leading-relaxed text-gray-700">
-                    Selamat datang di <strong>MyPosyandu</strong>, platform digital yang memudahkan orang tua dan
-                    keluarga
+                <h1 class="text-4xl sm:text-5xl md:text-6xl font-extrabold mb-4 text-purple-800">MyPosyandu</h1>
+                <p class="py-4 sm:py-6 text-base sm:text-lg leading-relaxed text-gray-700">
+                    Selamat datang di <strong>MyPosyandu</strong>, platform digital yang memudahkan orang tua dan keluarga
                     untuk memantau kesehatan ibu dan anak. Kami menyediakan informasi lengkap tentang layanan posyandu,
                     jadwal imunisasi, dan tips kesehatan. Bergabunglah dengan kami untuk masa depan yang lebih sehat!
                 </p>
-
                 <button
                     class="btn btn-primary btn-lg shadow-lg hover:shadow-2xl hover:bg-purple-700 transform hover:-translate-y-1 transition-all duration-300"
                     onclick="window.location.href='{{ route('login') }}'">
@@ -30,7 +24,7 @@
             </div>
         </div>
     </div>
-
+    
     <!-- About MyPosyandu Section -->
     <div class="py-16 bg-white">
         <div class="container mx-auto px-6 lg:px-16 flex flex-col lg:flex-row items-center">

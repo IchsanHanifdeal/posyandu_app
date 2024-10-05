@@ -21,4 +21,8 @@ class Ibu extends Model
     {
         return $this->hasOne(Pendamping::class, 'id_ibu', 'id_ibu');
     }
+    public function identitas_anak()
+    {
+        return $this->hasMany(IdentitasAnak::class, 'id_ibu', 'id_ibu');
+    }
 }

@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreign('id_posyandu')->references('id_posyandu')->on('posyandu')->onDelete('cascade')->onUpdate('cascade');
             $table->unsignedBigInteger('id_user');
             $table->foreign('id_user')->references('id_user')->on('users')->onDelete('cascade')->onUpdate('cascade');
-            $table->string('nik')->unique();
+            $table->string('nik')->unique()->nullable();
             $table->string('no_jkn')->nullable();
             $table->string('faskes_tk_1')->nullable();
             $table->string('faskes_rujukan')->nullable();

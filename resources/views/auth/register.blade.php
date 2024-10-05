@@ -61,6 +61,18 @@
                             </div>
                         @endforeach
                     </div>
+                    <div>
+                        <label for="id_posyandu"
+                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                            Pilih Posyandu
+                        </label>
+                        <select name="id_posyandu" id="id_posyandu" class="bg-[#974b34] border border-gray-300 text-white rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5">
+                            <option value="">--- Pilih Posyandu ---</option>
+                            @foreach ($posyandu as $item)
+                                <option value="{{ $item->id_posyandu }}">{{ $item->nama_posyandu }}</option>
+                            @endforeach
+                        </select>
+                    </div>
                     @php
                         $fields = [
                             [
