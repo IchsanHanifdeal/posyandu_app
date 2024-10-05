@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 use App\Models\Ibu;
 use App\Models\User;
@@ -50,7 +51,7 @@ class AuthController extends Controller
 	{
 		$rules = [
 			'nama_ibu' => 'required|string|max:255',
-			'id_posyandu' => 'required|string|max:255',
+			'id_posyandu' => 'required|exists:posyandu,id_posyandu',
 			'nik_ibu' => 'nullable|string|unique:ibu,nik',
 			'nomor_jkn_ibu' => 'nullable|string|unique:ibu,no_jkn',
 			'faskes_tk_1_ibu' => 'nullable|string|max:255',
@@ -78,32 +79,19 @@ class AuthController extends Controller
 			'alamat_rumah_suami' => 'nullable|string|max:255',
 			'no_handphone_suami' => 'nullable|numeric|unique:pendamping,no_hp',
 
-			'puskesmas_domisili' => 'required|string|max:255',
-			'no_register_kohort_ibu' => 'required|string|unique:ibu,no_register_kohort',
+			'puskesmas_domisili' => 'nullable|string|max:255',
+			'no_register_kohort_ibu' => 'nullable|string|unique:ibu,no_register_kohort',
 			'password' => 'required|string|min:8|confirmed',
 		];
 
 		$messages = [
 			'nama_ibu.required' => 'Nama ibu wajib diisi.',
-			'nik_ibu.required' => 'NIK ibu wajib diisi.',
 			'nik_ibu.unique' => 'NIK ibu sudah digunakan.',
-			'nomor_jkn_ibu.required' => 'Nomor JKN ibu wajib diisi.',
 			'nomor_jkn_ibu.unique' => 'Nomor JKN ibu sudah digunakan.',
-			'faskes_tk_1_ibu.required' => 'Faskes TK 1 ibu wajib diisi.',
-			'faskes_rujukan_ibu.required' => 'Faskes Rujukan ibu wajib diisi.',
-			'pembiayaan_ibu.required' => 'Pembiayaan ibu wajib diisi.',
-			'golongan_darah_ibu.required' => 'Golongan darah ibu wajib diisi.',
-			'tempat_lahir_ibu.required' => 'Tempat lahir ibu wajib diisi.',
-			'tanggal_lahir_ibu.required' => 'Tanggal lahir ibu wajib diisi.',
-			'tanggal_lahir_ibu.date' => 'Tanggal lahir ibu harus berupa tanggal yang valid.',
-			'pendidikan_ibu.required' => 'Pendidikan ibu wajib diisi.',
-			'pekerjaan_ibu.required' => 'Pekerjaan ibu wajib diisi.',
-			'alamat_rumah_ibu.required' => 'Alamat rumah ibu wajib diisi.',
+			'id_posyandu.required' => 'Posyandu wajib dipilih.',
+			'id_posyandu.exists' => 'Posyandu yang dipilih tidak valid.',
 			'no_handphone_ibu.required' => 'No handphone ibu wajib diisi.',
 			'no_handphone_ibu.unique' => 'No handphone ibu sudah digunakan.',
-			'nama_suami' => 'Nama suami/pendamping wajib diisi jika ada.',
-			'nik_suami.unique' => 'NIK suami/pendamping sudah digunakan.',
-			'nomor_jkn_suami.unique' => 'Nomor JKN suami/pendamping sudah digunakan.',
 			'puskesmas_domisili.required' => 'Puskesmas domisili wajib diisi.',
 			'no_register_kohort_ibu.required' => 'No Register Kohort Ibu wajib diisi.',
 			'no_register_kohort_ibu.unique' => 'No Register Kohort Ibu sudah digunakan.',
@@ -178,15 +166,18 @@ class AuthController extends Controller
 			);
 		} catch (\Exception $e) {
 			DB::rollBack();
+			
+			Log::error('Registration Error: ' . $e->getMessage());
+			
 			return back()->withErrors([
-				'loginError' => 'Pendaftaran gagal.',
+				'loginError' => 'Pendaftaran gagal: ' . $e->getMessage(), 
 			])->with('toast', [
-				'message' => 'Pendaftaran gagal.',
+				'message' => 'Pendaftaran gagal: ' . $e->getMessage(),
 				'type' => 'error'
 			])->withInput();
 		}
+		
 	}
-
 
 	/**
 	 * Display the specified resource.

@@ -1,4 +1,4 @@
-<x-dashboard.main title="Amanat Persalinan Ibu">
+<x-dashboard.main title="Pelayanan Dokter">
   @if (Auth::user()->role === 'admin')
     <div class="flex flex-col gap-5">
       @foreach (['PELAYANAN_DOKTER'] as $item)

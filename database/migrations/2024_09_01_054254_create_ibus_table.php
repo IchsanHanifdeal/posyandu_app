@@ -28,7 +28,7 @@ return new class extends Migration
             $table->string('pendidikan')->nullable();
             $table->string('pekerjaan')->nullable();
             $table->string('alamat')->nullable();
-            $table->string('puskesmas_domisili');
+            $table->string('puskesmas_domisili')->nullable();
             $table->string('no_register_kohort')->nullable();
             $table->timestamps();
         });
