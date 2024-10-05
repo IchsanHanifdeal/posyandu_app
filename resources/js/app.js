@@ -124,6 +124,19 @@ window.extractDocx = async ({ file }) => {
     return temp.then(x => x)
 }
 
+window.downloadDocs = async ({ file, payload, fileTitle = 'output' }) => {
+    const doc = await extractDocx({ file })
+    doc.render(payload);
+
+    const blob = doc.getZip().generate({
+        type: "blob",
+        mimeType: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        compression: "DEFLATE",
+    });
+
+    saveAs(blob, fileTitle + ".docx");
+}
+
 window.extractDocxKeys = async (doc) => {
     const keys = await doc.resolveData()
     const parse = keys.map(x => x.tag);
@@ -137,73 +150,4 @@ window.extractDocxKeys = async (doc) => {
         legal: () => _legal,
         label: () => _label
     }
-}
-
-window.extractDocxBase64 = async (doc, data) => {
-    doc.render(data);
-
-    const base64 = doc.getZip().generate({
-        type: "base64",
-        mimeType: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-        compression: "DEFLATE",
-    });
-
-    return base64
-}
-
-window.extractDocxBlob = async (doc, data) => {
-    doc.render(data);
-
-    const blob = doc.getZip().generate({
-        type: "blob",
-        mimeType: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-        compression: "DEFLATE",
-    });
-
-    return blob
-}
-
-window.extractDocxToPdf = async (blob_file) => {
-    const formData = new FormData();
-    formData.append('file', blob_file, `file_${Math.random().toString(36).substr(2, 9)}.docx`);
-
-    let ck = "pdf24FtSid=fnufc28g4r9culgacq29m5hnqe";
-    let headers = {
-        "Cookie": ck,
-    }
-
-    let upload = await fetch("https://filetools23.pdf24.org/client.php?action=upload", {
-        method: "POST",
-        body: formData,
-        headers: headers
-    });
-
-    let tempFile = await upload.json();
-
-    let convert = await fetch("/api/pdf/docx", {
-        method: "POST",
-        body: JSON.stringify({
-            files: tempFile,
-            cookie: ck
-        }),
-        headers: {
-            'Accept': 'application/octet-stream',
-        },
-    }).then(response => {
-        if (response.ok) {
-            return response.blob();
-        }
-        throw new Error('Network response was not ok.');
-    })
-        .then(blob => {
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.style.display = 'none';
-            a.href = url;
-            a.download = 'converted.pdf'; // Nama file yang akan diunduh
-            document.body.appendChild(a);
-            a.click();
-            window.URL.revokeObjectURL(url);
-        })
-
 }

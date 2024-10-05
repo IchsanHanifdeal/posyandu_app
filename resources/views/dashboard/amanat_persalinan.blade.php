@@ -228,6 +228,23 @@
                         <x-lucide-printer class="cursor-pointer size-5 hover:stroke-blue-500"
                           onclick="document.getElementById('detail_modal_{{ $item->id_user }}').showModal();" />
 
+                        <dialog id="detail_modal_{{ $item->id_user }}" class="modal modal-bottom sm:modal-middle">
+                          <div class="modal-box">
+                            <h3 class="text-lg font-bold">Cetak Amanat Persalinan</h3>
+                            <p class="py-4">Apakah Anda ingin mencetak dokumen Amanat
+                              Persalinan <strong>{{ $item->user->nama }}</strong>?</p>
+
+                            <div class="modal-action">
+                              <button onclick="printDocs({{ $item }})" class="btn btn-primary">
+                                Cetak
+                              </button>
+                              <button class="btn" onclick="document.getElementById('detail_modal_{{ $item->id_user }}').close();">
+                                Tutup
+                              </button>
+                            </div>
+                          </div>
+                        </dialog>
+
                         @if (Auth::user()->role === 'admin')
                           <div class="tooltip tooltip-top" data-tip="Tanda Tangan Dokter/Bidan">
                             <x-lucide-signature class="size-5 hover:stroke-black cursor-pointer"
@@ -279,79 +296,14 @@
   @endif
 </x-dashboard.main>
 
-<input type="checkbox" id="add_data_AMANAT_PERSALINAN_IBU_v1" class="modal-toggle" />
-<div class="modal" role="dialog" id="AMANAT_PERSALINAN_IBU">
-  <form onsubmit="setupFormGenerate(this, 'AMANAT_PERSALINAN_IBU', 'bkiabi-amanat-kesehatan.pdf')" action="javascript:void();" class="modal-box">
-    <h3 class="text-lg font-bold">Tambah Amanat Persalinan Ibu v1</h3>
-    <div id="container" class="flex flex-col w-full gap-2 mt-5">
-    </div>
-    <div class="modal-action">
-      <label for="add_data_AMANAT_PERSALINAN_IBU_v1" class="btn">Tutup</label>
-      <button type="submit" class="btn btn-primary">Cetak</button>
-    </div>
-  </form>
-</div>
-
-<input type="checkbox" id="add_data_AMANAT_PERSALINAN_IBU_v2" class="modal-toggle" />
-<div class="modal" role="dialog" id="AMANAT_PERSALINAN_IBU">
-  <form onsubmit="generateOutputForm()" action="javascript:void();" class="modal-box">
-    <h3 class="text-lg font-bold">Tambah Amanat Persalinan Ibu v2</h3>
-    <div id="pdf_form_AMANAT_PERSALINAN_IBU" class="w-full mt-5 rounded-lg overflow-hidden">
-    </div>
-    <div class="modal-action">
-      <label for="add_data_AMANAT_PERSALINAN_IBU_v2" class="btn">Tutup</label>
-      <button type="submit" class="btn btn-primary">Cetak</button>
-    </div>
-  </form>
-</div>
-
-<dialog id="input_modal_{{ $item->id_user }}" class="modal modal-bottom sm:modal-middle">
-  <form onsubmit="parseForm(this)" action="javascript:void();"S class="modal-box">
-    <h3 class="text-lg font-bold">Lengkapi Dokumen</h3>
-    <div class="flex flex-col py-4" id="input_render_amanat_persalinan">
-
-    </div>
-
-    <div class="modal-action">
-      <button type="submit" class="btn btn-primary">
-        Simpan
-      </button>
-      <button class="btn" type="button" onclick="document.getElementById('input_modal_{{ $item->id_user }}').close();">
-        Tutup
-      </button>
-    </div>
-  </form>
-</dialog>
-
-<dialog id="detail_modal_{{ $item->id_user }}" class="modal modal-bottom sm:modal-middle">
-  <div class="modal-box">
-    <h3 class="text-lg font-bold">Detail Amanat Persalinan</h3>
-    <p class="py-4">Apakah Anda ingin mencetak dokumen Amanat
-      Persalinan?</p>
-
-    <div class="modal-action">
-      <button onclick="generate()" class="btn btn-primary">
-        Cetak
-      </button>
-      <button class="btn" onclick="document.getElementById('detail_modal_{{ $item->id_user }}').close();">
-        Tutup
-      </button>
-    </div>
-  </div>
-</dialog>
-
 <script>
-  let TEMP_STORE;
+  let file = '/docx/bkiabi-amanat-persalinan.docx'
 
-  window.onload = async () => {
-    const data = await extractDocx({
-      file: '/docx/bkiabi-amanat-persalinan.docxs'
+  async function printDocs(file, payload) {
+    const doc = await downloadDocs({
+      file,
+      payload
     })
-
-    const keys = await extractDocxKeys(data)
-    const filter = keys.original().filter(x => !x.startsWith('%'));
-
-    renderFormInputs(filter, 'input_render_amanat_persalinan');
   }
 
   document.addEventListener('DOMContentLoaded', function() {

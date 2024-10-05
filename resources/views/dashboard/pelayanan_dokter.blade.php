@@ -32,7 +32,7 @@
   @endif
 </x-dashboard.main>
 
-@foreach (['Evaluasi Kesehatan Ibu Hamil', 'Skrining Preeklampsia', 'Pemeriksaan Dokter Trimester 1', 'Pemeriksaan Dokter Trimester 3'] as $item)
+@foreach (['Evaluasi Kesehatan Ibu Hamil', 'Skrining Preeklampsia', 'Pemeriksaan Dokter Trimester 1', 'Pemeriksaan Dokter Trimester 3'] as $i => $item)
   <dialog id="add_data_{{ str_replace(' ', '_', $item) }}" class="modal modal-bottom sm:modal-middle">
     <form onsubmit="saveData(this)" action="javascript:void();"S class="modal-box">
       <h3 class="text-lg font-bold">Lengkapi Dokumen</h3>
@@ -41,7 +41,7 @@
         <button type="submit" class="btn btn-primary">
           Simpan
         </button>
-        <button type="submit" class="btn btn-accent">
+        <button onclick="printDocs()" class="btn btn-accent">
           Cetak
         </button>
         <button class="btn" type="button" onclick="document.getElementById(`add_data_{{ str_replace(' ', '_', $item) }}`).close();">
@@ -54,12 +54,26 @@
 
 <script>
   let init_file = '';
+  let init_payload = {}
+
   let files = [
     '/docx/bkiabi-evaluasi-kesehatan-ibu.docx',
     '/docx/bkiabi-skrining-preeklampsia.docx',
     '/docx/bkiabi-pemeriksaan-dokter-trimester-1.docx',
     '/docx/bkiabi-pemeriksaan-dokter-trimester-3.docx',
   ]
+
+  async function printDocs() {
+    const doc = await downloadDocs({
+      file: init_file,
+      payload: init_payload
+    })
+  }
+
+  function saveData(data) {
+    const payload = parseForm(data)
+    init_payload = payload
+  }
 
   async function initInput(item, i) {
     init_file = files[i];
