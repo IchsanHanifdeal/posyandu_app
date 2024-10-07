@@ -64,7 +64,7 @@
                 </div>
                 <div class="input-label">
                     <h1 class="label">Nomor Handphone:</h1>
-                    <input disabled name="text" value="{{ Auth::user()->no_hp }}" type="no_hp" placeholder="...">
+                    <input value="{{ Auth::user()->no_hp }}" type="no_hp" placeholder="..." name="no_hp">
                 </div>
                 <button type="submit" class="btn btn-secondary mt-5 ml-auto capitalize w-fit">Update Profile</button>
             </form>
