@@ -14,9 +14,13 @@ class AmanatPersalinanController extends Controller
     {
         if (Auth::user()->role === 'user') {
             $ibu = Auth::user()->ibu;
+            $amanat = Amanat::all();
+
             return view('dashboard.amanat_persalinan', [
                 'ibu' => collect([$ibu]),
+                'amanat' => $amanat,
             ]);
+            
         }
 
         return view('dashboard.amanat_persalinan', [

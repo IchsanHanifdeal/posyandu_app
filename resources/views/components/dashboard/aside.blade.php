@@ -13,6 +13,12 @@
                     Dashboard
                 </a>
             </li>
+            <li>
+                <a href="{{ route('dashboard') }}" class="{!! Request::path() == 'dashboard' ? 'active' : '' !!} flex items-center px-2.5 font-semibold">
+                    <x-lucide-clipboard />
+                    Laporan
+                </a>
+            </li>
             @if (Auth::user()->role === 'super_admin')
                 <span class="label text-xs font-extrabold opacity-50">MAIN DATA</span>
                 <li>
@@ -38,13 +44,13 @@
                         Identitas Ibu 
                     </a>
                 </li>
-                <li>
+                {{-- <li>
                     <a href="{{ route('pernyataan_pelayanan') }}"
                         class="{!! preg_match('#^dashboard/pernyataan.*#', Request::path()) ? 'active' : '' !!} flex items-center px-2.5 font-semibold">
                         <x-lucide-file-text />
                         Pernyataan Pelayanan Ibu
                     </a>
-                </li>
+                </li> --}}
                 <li>
                     <a href="{{ route('amanat_persalinan') }}"
                         class="{!! preg_match('#^dashboard/amanat.*#', Request::path()) ? 'active' : '' !!} flex items-center px-2.5 font-semibold">
@@ -66,20 +72,20 @@
                         Pelayanan Kehamilan
                     </a>
                 </li> --}}
-                <li>
+                {{-- <li>
                     <a href="{{ route('pelayanan_nifas') }}"
                         class="{!! preg_match('#^dashboard/pelayanan_nifas.*#', Request::path()) ? 'active' : '' !!} flex items-center px-2.5 font-semibold">
                         <x-lucide-bed />
                         Pelayanan Nifas
                     </a>
-                </li>
-                <li>
+                </li> --}}
+                {{-- <li>
                     <a href="{{ route('rujukan') }}"
                         class="{!! preg_match('#^dashboard/rujukan.*#', Request::path()) ? 'active' : '' !!} flex items-center px-2.5 font-semibold">
                         <x-lucide-link />
                         Rujukan
                     </a>
-                </li>
+                </li> --}}
                 <span class="label text-xs font-extrabold opacity-50">INFORMASI IBU</span>
                 <li>
                     <a href="{{ route('ibu_hamil') }}"
@@ -138,13 +144,13 @@
                         Perkembangan Anak
                     </a>
                 </li>
-                <li>
+                {{-- <li>
                     <a href="{{ route('pelayanan_neonatus') }}"
                         class="{!! preg_match('#^dashboard/pelayanan_neonatus.*#', Request::path()) ? 'active' : '' !!} flex items-center px-2.5 font-semibold">
                         <x-lucide-baby />
                         Pelayanan Kesehatan Neonatus
                     </a>
-                </li>
+                </li> --}}
                 {{-- <li>
                     <a href="{{ route('sdidtk') }}"
                         class="{!! preg_match('#^dashboard/sdidtk.*#', Request::path()) ? 'active' : '' !!} flex items-center px-2.5 font-semibold">

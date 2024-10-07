@@ -16,16 +16,12 @@ class IdentitasAnakController extends Controller
      */
     public function index()
     {
-        // Check if the authenticated user is a 'user' role
         if (Auth::user()->role === 'user') {
-            // Get the authenticated user's associated 'ibu' record
             $ibu = Auth::user()->ibu;
 
             if ($ibu) {
-                // Fetch all 'anak' (children) records related to this 'ibu'
                 $anak = $ibu->identitas_anak;
             } else {
-                // If no 'ibu' is found, set empty values
                 $anak = collect(); // Empty collection
             }
 

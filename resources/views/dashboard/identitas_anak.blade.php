@@ -149,15 +149,15 @@
             $type = explode('_', $item)[0];
         @endphp
         <dialog id="{{ $item }}_modal" class="modal modal-bottom sm:modal-middle">
-            <form action="{{ route('store.anak') }}" method="POST" enctype="multipart/form-data"
+            <form action="{{ route('store.imunisasi') }}" method="POST" enctype="multipart/form-data"
                 class="modal-box bg-neutral">
                 @csrf
                 <h3 class="modal-title capitalize text-white">
-                    {{ str_replace('_', ' ', $item) }} Anak
+                    {{ str_replace('_', ' ', $item) }} Imunisasi Anak
                 </h3>
                 <div class="modal-body">
-                    <!-- Pertemuan Select Box -->
-                    <div>
+                    <!-- Nama Ibu -->
+                    <div class="mt-4">
                         <label for="id_ibu" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nama
                             Ibu</label>
                         <select id="id_ibu" name="id_ibu"
@@ -172,79 +172,70 @@
                         @enderror
                     </div>
 
-                    @php
-                        $fields = [
-                            ['name' => 'no_surat', 'label' => 'No. Surat', 'type' => 'text'],
-                            ['name' => 'hari', 'label' => 'Hari', 'type' => 'text'],
-                            ['name' => 'tanggal', 'label' => 'Tanggal', 'type' => 'date'],
-                            ['name' => 'pukul', 'label' => 'Pukul', 'type' => 'time'],
-                            [
-                                'name' => 'jenis_kelamin',
-                                'label' => 'Jenis Kelamin',
-                                'type' => 'select',
-                                'options' => ['laki-laki' => 'Laki-laki', 'perempuan' => 'Perempuan'],
-                            ],
-                            [
-                                'name' => 'jenis_kelahiran',
-                                'label' => 'Jenis Kelahiran',
-                                'type' => 'select',
-                                'options' => [
-                                    'tunggal' => 'Tunggal',
-                                    'kembar 2' => 'Kembar 2',
-                                    'kembar 3' => 'Kembar 3',
-                                    'lainnya' => 'Lainnya',
-                                ],
-                            ],
-                            ['name' => 'kelahiran_ke', 'label' => 'Kelahiran Ke', 'type' => 'text'],
-                            ['name' => 'berat', 'label' => 'Berat (kg)', 'type' => 'text'],
-                            ['name' => 'panjang', 'label' => 'Panjang (cm)', 'type' => 'text'],
-                            ['name' => 'tempat_kelahiran', 'label' => 'Tempat Kelahiran', 'type' => 'text'],
-                            ['name' => 'nama', 'label' => 'Nama Anak', 'type' => 'text'],
-                            // ['name' => 'ttd_saksi1', 'label' => 'Tanda Tangan Saksi 1', 'type' => 'text'],
-                            ['name' => 'nama_saksi1', 'label' => 'Nama Saksi 1', 'type' => 'text'],
-                            // ['name' => 'ttd_saksi2', 'label' => 'Tanda Tangan Saksi 2', 'type' => 'text'],
-                            ['name' => 'nama_saksi2', 'label' => 'Nama Saksi 2', 'type' => 'text'],
-                            // [
-                            //     'name' => 'ttd_penolong_persalinan',
-                            //     'label' => 'Tanda Tangan Penolong Persalinan',
-                            //     'type' => 'text',
-                            // ],
-                            [
-                                'name' => 'nama_penolong_persalinan',
-                                'label' => 'Nama Penolong Persalinan',
-                                'type' => 'text',
-                            ],
-                        ];
-                    @endphp
-                    @foreach ($fields as $field)
-                        <div class="mt-4">
-                            <label for="{{ $field['name'] }}"
-                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{ $field['label'] }}</label>
-                            @if ($field['type'] === 'select')
-                                <select id="{{ $field['name'] }}" name="{{ $field['name'] }}"
-                                    class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                                    <option value="">Pilih {{ $field['label'] }}</option>
-                                    @foreach ($field['options'] as $value => $optionLabel)
-                                        <option value="{{ $value }}">{{ $optionLabel }}</option>
-                                    @endforeach
-                                </select>
-                            @else
-                                <input type="{{ $field['type'] }}" id="{{ $field['name'] }}"
-                                    name="{{ $field['name'] }}"
-                                    placeholder="Masukan {{ str_replace('_', ' ', $field['name']) }}..."
-                                    class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                    value="{{ old($field['name']) }}">
-                            @endif
-                            @error($field['name'])
-                                <p class="text-red-600 text-sm">{{ $message }}</p>
-                            @enderror
-                        </div>
-                    @endforeach
+                    <!-- Nama Anak -->
+                    <div class="mt-4">
+                        <label for="id_anak" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nama
+                            Anak</label>
+                        <select id="id_anak" name="id_anak"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                            <option value="">Pilih Anak</option>
+                            @foreach ($anak as $item)
+                                <option value="{{ $item->id_anak }}">{{ $item->nama_anak }}</option>
+                            @endforeach
+                        </select>
+                        @error('id_anak')
+                            <p class="text-red-600 text-sm">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <!-- Jenis Vaksin -->
+                    <div class="mt-4">
+                        <label for="jenis_vaksin"
+                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Jenis Vaksin</label>
+                        <select id="jenis_vaksin" name="jenis_vaksin"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                            <option value="">Pilih Vaksin</option>
+                            <option value="Hepatitis B (<24 Jam)">Hepatitis B (<24 Jam)</option>
+                            <option value="BCG">BCG</option>
+                            <option value="Polio tetes 1">Polio tetes 1</option>
+                            <option value="DPT-HB-Hib 1">DPT-HB-Hib 1</option>
+                            <!-- Add more options as needed -->
+                        </select>
+                        @error('jenis_vaksin')
+                            <p class="text-red-600 text-sm">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <!-- No Batch -->
+                    <div class="mt-4">
+                        <label for="no_batch" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">No
+                            Batch</label>
+                        <input type="text" id="no_batch" name="no_batch" placeholder="Masukkan No Batch..."
+                            class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            value="{{ old('no_batch') }}">
+                        @error('no_batch')
+                            <p class="text-red-600 text-sm">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <!-- Tanggal -->
+                    <div class="mt-4">
+                        <label for="tanggal"
+                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tanggal
+                            Imunisasi</label>
+                        <input type="date" id="tanggal" name="tanggal"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            value="{{ old('tanggal') }}">
+                        @error('tanggal')
+                            <p class="text-red-600 text-sm">{{ $message }}</p>
+                        @enderror
+                    </div>
                 </div>
+
                 <div class="modal-action">
                     <button type="button" onclick="document.getElementById('{{ $item }}_modal').close()"
                         class="btn">Tutup</button>
-                    <button type="submit" class="btn btn-neutral-700 capitalize">Tambah Anak</button>
+                    <button type="submit" class="btn btn-neutral-700 capitalize">Tambah Imunisasi</button>
                 </div>
             </form>
         </dialog>
