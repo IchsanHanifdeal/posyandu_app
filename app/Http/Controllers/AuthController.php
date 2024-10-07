@@ -22,6 +22,10 @@ class AuthController extends Controller
 		return view('auth.login');
 	}
 
+	public function bayiBaruLahir()
+	{
+		return view('dashboard.bayi_baru_lahir');
+	}
 	public function pelayananDokter()
 	{
 		return view('dashboard.pelayanan_dokter');

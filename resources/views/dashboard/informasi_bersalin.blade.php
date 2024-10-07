@@ -24,15 +24,15 @@
                                 $informasiIbuHamil = [
                                     [
                                         'id' => 1,
-                                        'judul' => 'Proses Melahirkan',
-                                        'gambar' => 'proses_melahirkan.jpg',
-                                        'deskripsi' => 'Proses Melahirkan',
-                                    ],
-                                    [
-                                        'id' => 2,
                                         'judul' => 'Tanda Awal akan Melahirkan',
                                         'gambar' => 'tanda_awal.jpg',
                                         'deskripsi' => 'Tanda Awal akan Melahirkan',
+                                    ],
+                                    [
+                                        'id' => 2,
+                                        'judul' => 'Proses Melahirkan',
+                                        'gambar' => 'proses_melahirkan.jpg',
+                                        'deskripsi' => 'Proses Melahirkan',
                                     ],
                                     [
                                         'id' => 3,
