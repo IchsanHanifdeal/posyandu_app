@@ -43,7 +43,8 @@
                     kesehatan ibu dan anak di Indonesia. Sebagai bagian dari solusi kesehatan modern,
                     <strong>MyPosyandu</strong> mempermudah akses ke layanan posyandu, jadwal imunisasi, dan berbagai
                     tips kesehatan yang dapat diakses kapan saja, di mana saja. Aplikasi ini merupakan hasil kegiatan
-                    pengabdian dosen yang didanai oleh <strong>DRTPM</strong> dan <strong>LPPM Universitas Riau (UNRI)</strong>.
+                    pengabdian dosen yang didanai oleh <strong>DRTPM</strong> dan <strong>LPPM Universitas Riau
+                        (UNRI)</strong>.
                 </p>
                 <p class="text-lg leading-relaxed text-gray-600 mt-4">
                     Dengan fitur-fitur canggih seperti pengingat imunisasi, pemantauan perkembangan anak, dan akses
@@ -58,49 +59,53 @@
             </div>
         </div>
     </div>
-    <!-- Summary Section -->
     <div class="py-16 bg-white">
         <div class="container mx-auto px-6 lg:px-16">
             <h2 class="text-4xl font-bold text-center mb-12 text-pink-800">
                 Data Posyandu <span class="text-pink-600">Terkini</span>
             </h2>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
-                <!-- Total Participants -->
-                <div
-                    class="bg-pink-100 shadow-lg rounded-lg p-6 text-center hover:shadow-xl transition-shadow duration-300 ease-in-out">
-                    <h3 class="text-2xl font-semibold text-pink-800">Jumlah Peserta Posyandu</h3>
-                    <p class="text-4xl font-bold text-pink-600">250</p>
+            @foreach ($posyanduList as $posyandu)
+                <h3 class="text-3xl font-semibold text-center text-pink-700 mb-6">{{ $posyandu->nama_posyandu }}</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-8 mb-12">
+                    @foreach ($summaryItems as $item)
+                        <div
+                            class="bg-pink-100 shadow-lg rounded-lg p-6 text-center hover:shadow-xl transition-shadow duration-300 ease-in-out">
+                            <h3 class="text-2xl font-semibold text-pink-800">{{ ucwords(str_replace('_', ' ', $item)) }}
+                            </h3>
+                            <p class="text-4xl font-bold text-pink-600">
+                                @if ($item == 'sasaran_balita_perbulan')
+                                    {{ $posyandu->laporan->sasaran_balita_perbulan ?? '-' }}
+                                @elseif ($item == 'sasaran_ds_perbulan')
+                                    {{ $posyandu->laporan->sasaran_ds_perbulan ?? '-' }}
+                                @elseif ($item == 'sasaran_ibu_hamil')
+                                    {{ $posyandu->laporan->sasaran_ibu_hamil ?? '-' }}
+                                @elseif ($item == 'ibu_hamil_yang_dapat_pelayanan')
+                                    {{ $posyandu->laporan->ibu_hamil_yang_dapat_pelayanan ?? '-' }}
+                                @elseif ($item == 'sasaran_remaja')
+                                    {{ $posyandu->laporan->sasaran_remaja ?? '-' }}
+                                @elseif ($item == 'remaja_yang_dapat_pelayanan_kesehatan')
+                                    {{ $posyandu->laporan->remaja_yang_dapat_pelayanan_kesehatan ?? '-' }}
+                                @elseif ($item == 'sasaran_usia_produktif')
+                                    {{ $posyandu->laporan->sasaran_usia_produktif ?? '-' }}
+                                @elseif ($item == 'usia_produktif_yang_dapat_pelayanan_kesehatan')
+                                    {{ $posyandu->laporan->usia_produktif_yang_dapat_pelayanan_kesehatan ?? '-' }}
+                                @elseif ($item == 'sasaran_lansia')
+                                    {{ $posyandu->laporan->sasaran_lansia ?? '-' }}
+                                @elseif ($item == 'lansia_yang_dapat_pelayanan_kesehatan')
+                                    {{ $posyandu->laporan->lansia_yang_dapat_pelayanan_kesehatan ?? '-' }}
+                                @elseif ($item == 'jumlah_bayi_yang_di_imunisasi')
+                                    {{ $posyandu->laporan->jumlah_bayi_yang_di_imunisasi ?? '-' }}
+                                @elseif ($item == 'jumlah_kunjungan_rumah')
+                                    {{ $posyandu->laporan->jumlah_kunjungan_rumah ?? '-' }}
+                                @else
+                                    {{ '-' }}
+                                @endif
+                            </p>
+                        </div>
+                    @endforeach
                 </div>
-
-                <!-- Sasaran Balita -->
-                <div
-                    class="bg-pink-100 shadow-lg rounded-lg p-6 text-center hover:shadow-xl transition-shadow duration-300 ease-in-out">
-                    <h3 class="text-2xl font-semibold text-pink-800">Sasaran Balita</h3>
-                    <p class="text-4xl font-bold text-pink-600">150</p>
-                </div>
-
-                <!-- Sasaran Ibu Hamil -->
-                <div
-                    class="bg-pink-100 shadow-lg rounded-lg p-6 text-center hover:shadow-xl transition-shadow duration-300 ease-in-out">
-                    <h3 class="text-2xl font-semibold text-pink-800">Sasaran Ibu Hamil</h3>
-                    <p class="text-4xl font-bold text-pink-600">100</p>
-                </div>
-
-                <!-- Imunisasi Bayi -->
-                <div
-                    class="bg-pink-100 shadow-lg rounded-lg p-6 text-center hover:shadow-xl transition-shadow duration-300 ease-in-out">
-                    <h3 class="text-2xl font-semibold text-pink-800">Jumlah Bayi Imunisasi</h3>
-                    <p class="text-4xl font-bold text-pink-600">80</p>
-                </div>
-
-                <!-- Total Ibu Hamil Mendapat Pelayanan -->
-                <div
-                    class="bg-pink-100 shadow-lg rounded-lg p-6 text-center hover:shadow-xl transition-shadow duration-300 ease-in-out">
-                    <h3 class="text-2xl font-semibold text-pink-800">Ibu Hamil Dapat Pelayanan</h3>
-                    <p class="text-4xl font-bold text-pink-600">90</p>
-                </div>
-            </div>
+            @endforeach
         </div>
     </div>
 

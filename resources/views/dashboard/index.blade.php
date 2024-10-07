@@ -22,18 +22,18 @@
             </div>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-7 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-6">
             <!-- Valentine Themed Cards -->
-            @foreach (['rata_rata_tinggi_anak', 'rata_rata_berat_anak', 'sasaran_balita_perbulan', 'sasaran_D/s_perbulan', 'sasaran_ibu_hamil', 'ibu_hamil_yang_dapat_pelayanan', 'sasaran_remaja', 'remaja_yang_dapat_pelayanan_kesehatan', 'sasaran_usia_produktif', 'usia_produktif_yang_dapat_pelayanan_kesehatan', 'sasaran_lansia', 'lansia_yang_dapat_pelayanan_kesehatan', 'jumlah_bayi_yang_di_imunisasi', 'jumlah_kunjungan_rumah'] as $item)
+            @foreach (['sasaran_balita_perbulan', 'sasaran_D/s_perbulan', 'sasaran_ibu_hamil', 'ibu_hamil_yang_dapat_pelayanan', 'sasaran_remaja', 'remaja_yang_dapat_pelayanan_kesehatan', 'sasaran_usia_produktif', 'usia_produktif_yang_dapat_pelayanan_kesehatan', 'sasaran_lansia', 'lansia_yang_dapat_pelayanan_kesehatan', 'jumlah_bayi_yang_di_imunisasi', 'jumlah_kunjungan_rumah'] as $item)
                 <div
                     class="bg-gradient-to-br from-pink-200 via-red-200 to-purple-200 p-6 rounded-xl shadow-lg transition-transform transform hover:scale-105 hover:shadow-2xl flex items-center">
                     <div class="ml-6">
                         <div id="{{ $item }}" class="text-red-800 text-2xl font-extrabold">
-                            @if ($item == 'rata_rata_tinggi_anak')
+                            {{-- @if ($item == 'rata_rata_tinggi_anak')
                                 {{ $rata_rata_tinggi_anak ?? '0' }} cm
                             @elseif ($item == 'rata_rata_berat_anak')
-                                {{ $rata_rata_berat_anak ?? '0' }} kg
-                            @elseif ($item == 'sasaran_balita_perbulan')
+                                {{ $rata_rata_berat_anak ?? '0' }} kg --}}
+                            @if ($item == 'sasaran_balita_perbulan')
                                 {{ $sasaran_balita_perbulan ?? '-' }}
                             @elseif ($item == 'sasaran_D/s_perbulan')
                                 {{ $sasaran_D_s_perbulan ?? '-' }}

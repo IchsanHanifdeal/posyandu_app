@@ -13,8 +13,8 @@
             </div>
         @endforeach
     </div>
-    <div class="flex gap-5">
 
+    <div class="flex gap-5">
         @foreach (['imunisasi_anak'] as $item)
             <div class="flex flex-col w-full border-back rounded-xl">
                 <div class="p-5 bg-white sm:p-7 rounded-t-xl">
@@ -44,6 +44,41 @@
                                         </td>
                                         <td class="font-semibold text-center capitalize">{{ $item->jenis_vaksin }}</td>
                                         <td class="font-semibold text-center capitalize">{{ $item->tanggal }}</td>
+                                        <td class="flex items-center gap-4">
+
+                                            <x-lucide-trash class="cursor-pointer size-5 hover:stroke-red-500"
+                                                onclick="document.getElementById('hapus_modal_{{ $item->id_ibu }}').showModal();" />
+
+                                            <dialog id="hapus_modal_{{ $item->id_ibu }}"
+                                                class="modal modal-bottom sm:modal-middle">
+                                                <div class="modal-box bg-base-100">
+                                                    <h3 class="text-lg font-bold capitalize">Hapus
+                                                        Imunisasi Anak
+                                                    </h3>
+                                                    <div class="mt-3">
+                                                        <p class="font-semibold text-red-800">Perhatian! Anda
+                                                            sedang
+                                                            mencoba untuk menghapus Imunisasi Anak
+                                                            <span class="text-black">Tindakan ini akan menghapus
+                                                                semua data terkait. Apakah Anda yakin ingin
+                                                                melanjutkan?</span>
+                                                        </p>
+                                                    </div>
+                                                    <div class="modal-action">
+                                                        <button type="button"
+                                                            onclick="document.getElementById('hapus_modal_{{ $item->id_ibu }}').close()"
+                                                            class="btn">Batal</button>
+                                                        <form
+                                                            action="{{ route('destroy.imunisasi', $item->id_ibu) }}"
+                                                            method="POST" class="inline-block">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button type="submit" class="btn btn-danger">Hapus</button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </dialog>
+                                        </td>
                                     </tr>
                                 @endforeach
                             </tbody>

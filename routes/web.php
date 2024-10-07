@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Posyandu;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\SkriningPreeklampsia;
@@ -7,10 +8,11 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\LaporanController;
 use App\Http\Controllers\ProfileController;
+
 use App\Http\Controllers\RujukanController;
 use App\Http\Controllers\PenggunaController;
-
 use App\Http\Controllers\PosyanduController;
 use App\Http\Controllers\ImunisasiController;
 use App\Http\Controllers\InformasiController;
@@ -36,7 +38,27 @@ use App\Http\Controllers\SkriningPreeklampsiaController;
 */
 
 Route::get('/', function (Request $request) {
-    return view('home.index');
+
+    $posyanduList = Posyandu::with('laporan')->get();
+
+    // Daftar item yang ingin ditampilkan
+    $summaryItems = [
+        'sasaran_balita_perbulan',
+        'sasaran_ds_perbulan',
+        'sasaran_ibu_hamil',
+        'ibu_hamil_yang_dapat_pelayanan',
+        'sasaran_remaja',
+        'remaja_yang_dapat_pelayanan_kesehatan',
+        'sasaran_usia_produktif',
+        'usia_produktif_yang_dapat_pelayanan_kesehatan',
+        'sasaran_lansia',
+        'lansia_yang_dapat_pelayanan_kesehatan',
+        'jumlah_bayi_yang_di_imunisasi',
+        'jumlah_kunjungan_rumah'
+    ];
+
+
+    return view('home.index', compact('posyanduList', 'summaryItems'));
 });
 
 Route::get('/login', [AuthController::class, 'index'])->name('login');
@@ -93,9 +115,43 @@ Route::middleware(['auth'])->group(function () {
         }
         // Check if the user has the 'admin' role
         else if ($user->role == 'admin') {
+            // Fetch average data for children from the database
+            $averageData = DB::table('laporan')
+                ->select(
+                    // DB::raw('AVG(rata_rata_tinggi_anak) as rata_rata_tinggi_anak'),
+                    // DB::raw('AVG(rata_rata_berat_anak) as rata_rata_berat_anak'),
+                    DB::raw('SUM(sasaran_balita_perbulan) as sasaran_balita_perbulan'),
+                    DB::raw('SUM(sasaran_ds_perbulan) as sasaran_D_s_perbulan'),
+                    DB::raw('SUM(sasaran_ibu_hamil) as sasaran_ibu_hamil'),
+                    DB::raw('SUM(ibu_hamil_yang_dapat_pelayanan) as ibu_hamil_yang_dapat_pelayanan'),
+                    DB::raw('SUM(sasaran_remaja) as sasaran_remaja'),
+                    DB::raw('SUM(remaja_yang_dapat_pelayanan_kesehatan) as remaja_yang_dapat_pelayanan_kesehatan'),
+                    DB::raw('SUM(sasaran_usia_produktif) as sasaran_usia_produktif'),
+                    DB::raw('SUM(usia_produktif_yang_dapat_pelayanan_kesehatan) as usia_produktif_yang_dapat_pelayanan_kesehatan'),
+                    DB::raw('SUM(sasaran_lansia) as sasaran_lansia'),
+                    DB::raw('SUM(lansia_yang_dapat_pelayanan_kesehatan) as lansia_yang_dapat_pelayanan_kesehatan'),
+                    DB::raw('SUM(jumlah_bayi_yang_di_imunisasi) as jumlah_bayi_yang_di_imunisasi'),
+                    DB::raw('SUM(jumlah_kunjungan_rumah) as jumlah_kunjungan_rumah')
+                )
+                ->first();
 
-
-            return view('dashboard.index', []);
+            // Return the view with average data for 'admin' role
+            return view('dashboard.index', [
+                // 'rata_rata_tinggi_anak' => $averageData->rata_rata_tinggi_anak,
+                // 'rata_rata_berat_anak' => $averageData->rata_rata_berat_anak,
+                'sasaran_balita_perbulan' => $averageData->sasaran_balita_perbulan,
+                'sasaran_D_s_perbulan' => $averageData->sasaran_D_s_perbulan,
+                'sasaran_ibu_hamil' => $averageData->sasaran_ibu_hamil,
+                'ibu_hamil_yang_dapat_pelayanan' => $averageData->ibu_hamil_yang_dapat_pelayanan,
+                'sasaran_remaja' => $averageData->sasaran_remaja,
+                'remaja_yang_dapat_pelayanan_kesehatan' => $averageData->remaja_yang_dapat_pelayanan_kesehatan,
+                'sasaran_usia_produktif' => $averageData->sasaran_usia_produktif,
+                'usia_produktif_yang_dapat_pelayanan_kesehatan' => $averageData->usia_produktif_yang_dapat_pelayanan_kesehatan,
+                'sasaran_lansia' => $averageData->sasaran_lansia,
+                'lansia_yang_dapat_pelayanan_kesehatan' => $averageData->lansia_yang_dapat_pelayanan_kesehatan,
+                'jumlah_bayi_yang_di_imunisasi' => $averageData->jumlah_bayi_yang_di_imunisasi,
+                'jumlah_kunjungan_rumah' => $averageData->jumlah_kunjungan_rumah,
+            ]);
         }
     })->name('dashboard');
 
@@ -133,24 +189,24 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/dashboard/pelayanan_dokter/trimester_1/post', [TrimesterController::class, 'store'])->name('store.trimester_1');
     Route::put('/dashboard/pelayanan_dokter/trimester_1/{id}/update', [TrimesterController::class, 'update'])->name('update.trimester_1');
     Route::delete('/dashboard/pelayanan_dokter/trimester_1/{id}/delete', [TrimesterController::class, 'destroy'])->name('destroy.trimester_1');
-    
+
     Route::get('/dashboard/pelayanan_dokter/trimester_3', [TrimesterController::class, 'index_3'])->name('trimester_3');
     Route::post('/dashboard/pelayanan_dokter/trimester_3/post', [TrimesterController::class, 'store_3'])->name('store.trimester_3');
     Route::put('/dashboard/pelayanan_dokter/trimester_3/{id}/update', [TrimesterController::class, 'update_3'])->name('update.trimester_3');
     Route::delete('/dashboard/pelayanan_dokter/trimester_3/{id}/delete', [TrimesterController::class, 'destroy_3'])->name('destroy.trimester_3');
-    
+
     Route::get('/dashboard/pelayanan_dokter/skrining_preeklampsia', [SkriningPreeklampsiaController::class, 'index'])->name('skrining_preeklampsia');
     Route::post('/dashboard/pelayanan_dokter/skrining_preeklampsia/post', [SkriningPreeklampsiaController::class, 'store'])->name('store.skrining_preeklampsia');
     Route::put('/dashboard/pelayanan_dokter/skrining_preeklampsia/{id}/update', [SkriningPreeklampsiaController::class, 'update'])->name('update.skrining_preeklampsia');
     Route::delete('/dashboard/pelayanan_dokter/skrining_preeklampsia/{id}/delete', [SkriningPreeklampsiaController::class, 'destroy'])->name('destroy.skrining_preeklampsia');
 
     // Route::get('/dashboard/pelayanan_kehamilan', [AuthController::class, 'pelayananKehamilan'])->name('pelayanan_kehamilan');
-    
+
     Route::get('/dashboard/pelayanan_nifas', [AuthController::class, 'pelayananNifas'])->name('pelayanan_nifas');
     Route::post('/dashboard/pelayanan_nifas/store', [PelayananNifasController::class, 'store'])->name('store.pelayanan_nifas');
     Route::put('/dashboard/pelayanan_nifas/{id}/update', [PelayananNifasController::class, 'update'])->name('update.pelayanan_nifas');
     Route::delete('/dashboard/pelayanan_nifas/{id}/destroy', [PelayananNifasController::class, 'destroy'])->name('destroy.pelayanan_nifas');
-    
+
     Route::get('/dashboard/rujukan', [RujukanController::class, 'index'])->name('rujukan');
     Route::post('/dashboard/rujukan/post', [RujukanController::class, 'store'])->name('store.rujukan');
     Route::put('/dashboard/rujukan/{}/update', [RujukanController::class, 'update'])->name('update.rujukan');
@@ -182,6 +238,11 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/dashboard/imunisasi/store', [ImunisasiController::class, 'store'])->name('store.imunisasi');
     Route::put('/dashboard/imunisasi/{id}/update', [ImunisasiController::class, 'update'])->name('update.imunisasi');
     Route::delete('/dashboard/imunisasi/{id}/delete', [ImunisasiController::class, 'destroy'])->name('destroy.imunisasi');
+
+    Route::get('/dashboard/laporan', [LaporanController::class, 'index'])->name('laporan');
+    Route::post('/dashboard/laporan/store', [LaporanController::class, 'store'])->name('store.laporan');
+    Route::put('/dashboard/laporan/{id}/update', [LaporanController::class, 'update'])->name('update.laporan');
+    Route::delete('/dashboard/laporan/{id}/delete', [LaporanController::class, 'destroy'])->name('destroy.laporan');
 
     // Route::get('/dashboard/pmba', [AuthController::class, 'pmba'])->name('pmba');
     // Route::get('/dashboard/vit_a', [AuthController::class, 'vitA'])->name('vit_a');

@@ -14,4 +14,14 @@ class Posyandu extends Model
         'id_posyandu',
         'id_user',
     ];
+
+    public function posyandu()
+    {
+        return $this->belongsTo(Posyandu::class, 'id_posyandu');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'id_user', 'id_user');
+    }
 }

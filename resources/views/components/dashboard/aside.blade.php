@@ -13,12 +13,15 @@
                     Dashboard
                 </a>
             </li>
-            <li>
-                <a href="{{ route('dashboard') }}" class="{!! Request::path() == 'dashboard' ? 'active' : '' !!} flex items-center px-2.5 font-semibold">
-                    <x-lucide-clipboard />
-                    Laporan
-                </a>
-            </li>
+            @if (Auth::user()->role === 'admin')
+                <li>
+                    <a href="{{ route('laporan') }}"
+                        class="{!! Request::path() == 'dashboard/laporan' ? 'active' : '' !!} flex items-center px-2.5 font-semibold">
+                        <x-lucide-clipboard />
+                        Laporan
+                    </a>
+                </li>
+            @endif
             @if (Auth::user()->role === 'super_admin')
                 <span class="label text-xs font-extrabold opacity-50">MAIN DATA</span>
                 <li>
@@ -41,7 +44,7 @@
                     <a href="{{ route('identitas_ibu_hamil') }}"
                         class="{!! preg_match('#^dashboard/identitas_ibu_hamil.*#', Request::path()) ? 'active' : '' !!} flex items-center px-2.5 font-semibold">
                         <x-lucide-user-check />
-                        Identitas Ibu 
+                        Identitas Ibu
                     </a>
                 </li>
                 {{-- <li>
