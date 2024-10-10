@@ -4,26 +4,26 @@
         <div
             class="hidden lg:block absolute top-0 right-0 bg-pink-200 rounded-full w-64 h-64 opacity-30 transform translate-x-1/2 -translate-y-1/2">
         </div>
+
         <div
             class="hidden lg:block absolute bottom-0 left-0 bg-purple-200 rounded-full w-48 h-48 opacity-40 transform -translate-x-1/2 translate-y-1/2">
         </div>
 
         <div
-            class="hero-content flex flex-col lg:flex-row-reverse items-center justify-center h-full relative z-10 px-6 lg:px-16">
+            class="hero-content flex flex-col lg:flex-row-reverse items-center justify-center h-full relative z-10 px-6 sm:px-8 md:px-10 lg:px-16">
             <img src="{{ asset('images/hero.png') }}"
-                class="max-w-sm rounded-lg transform hover:scale-105 transition-transform duration-300 mb-8 lg:mb-0"
+                class="w-1/4 h-auto rounded-lg transform hover:scale-105 transition-transform duration-300 mb-8"
                 alt="MyPosyandu Image" />
             <div class="text-center lg:text-left lg:mr-10">
-                <h1 class="text-5xl font-extrabold mb-4 text-purple-800">MyPosyandu</h1>
-                <p class="py-6 text-lg leading-relaxed text-gray-700">
+                <h1 class="text-4xl sm:text-5xl md:text-6xl font-extrabold mb-4 text-pink-600">MyPosyandu</h1>
+                <p class="py-4 sm:py-6 text-base sm:text-lg leading-relaxed text-gray-700">
                     Selamat datang di <strong>MyPosyandu</strong>, platform digital yang memudahkan orang tua dan
                     keluarga
                     untuk memantau kesehatan ibu dan anak. Kami menyediakan informasi lengkap tentang layanan posyandu,
                     jadwal imunisasi, dan tips kesehatan. Bergabunglah dengan kami untuk masa depan yang lebih sehat!
                 </p>
-
                 <button
-                    class="btn btn-primary btn-lg shadow-lg hover:shadow-2xl hover:bg-purple-700 transform hover:-translate-y-1 transition-all duration-300"
+                    class="btn btn-primary btn-lg shadow-lg hover:shadow-2xl hover:bg-pink-700 transform hover:-translate-y-1 transition-all duration-300"
                     onclick="window.location.href='{{ route('login') }}'">
                     Bergabung Sekarang
                 </button>
@@ -35,14 +35,16 @@
     <div class="py-16 bg-white">
         <div class="container mx-auto px-6 lg:px-16 flex flex-col lg:flex-row items-center">
             <div class="lg:w-1/2">
-                <h2 class="text-4xl font-bold mb-4 text-gray-800">
-                    Tentang <span class="text-green-600">MyPosyandu</span>
+                <h2 class="text-4xl font-bold mb-4 text-pink-800">
+                    Tentang <span class="text-pink-600">MyPosyandu</span>
                 </h2>
                 <p class="text-lg leading-relaxed text-gray-600">
                     <strong>MyPosyandu</strong> adalah platform digital yang dikembangkan untuk mendukung peningkatan
                     kesehatan ibu dan anak di Indonesia. Sebagai bagian dari solusi kesehatan modern,
                     <strong>MyPosyandu</strong> mempermudah akses ke layanan posyandu, jadwal imunisasi, dan berbagai
-                    tips kesehatan yang dapat diakses kapan saja, di mana saja.
+                    tips kesehatan yang dapat diakses kapan saja, di mana saja. Aplikasi ini merupakan hasil kegiatan
+                    pengabdian dosen yang didanai oleh <strong>DRTPM</strong> dan <strong>LPPM Universitas Riau
+                        (UNRI)</strong>.
                 </p>
                 <p class="text-lg leading-relaxed text-gray-600 mt-4">
                     Dengan fitur-fitur canggih seperti pengingat imunisasi, pemantauan perkembangan anak, dan akses
@@ -52,53 +54,58 @@
                 </p>
             </div>
             <div class="lg:w-1/2 mt-8 lg:mt-0 lg:pl-10">
-                <img src="{{ asset('images/about.png') }}" class="w-full rounded-lg shadow-lg" alt="About MyPosyandu Image" />
+                <img src="{{ asset('images/about.png') }}" class="w-full rounded-lg shadow-lg"
+                    alt="About MyPosyandu Image" />
             </div>
         </div>
     </div>
-    <!-- Summary Section -->
     <div class="py-16 bg-white">
         <div class="container mx-auto px-6 lg:px-16">
             <h2 class="text-4xl font-bold text-center mb-12 text-pink-800">
                 Data Posyandu <span class="text-pink-600">Terkini</span>
             </h2>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
-                <!-- Total Participants -->
-                <div
-                    class="bg-pink-100 shadow-lg rounded-lg p-6 text-center hover:shadow-xl transition-shadow duration-300 ease-in-out">
-                    <h3 class="text-2xl font-semibold text-pink-800">Jumlah Peserta Posyandu</h3>
-                    <p class="text-4xl font-bold text-pink-600">250</p>
+            @foreach ($posyanduList as $posyandu)
+                <h3 class="text-3xl font-semibold text-center text-pink-700 mb-6">{{ $posyandu->nama_posyandu }}</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-8 mb-12">
+                    @foreach ($summaryItems as $item)
+                        <div
+                            class="bg-pink-100 shadow-lg rounded-lg p-6 text-center hover:shadow-xl transition-shadow duration-300 ease-in-out">
+                            <h3 class="text-2xl font-semibold text-pink-800">{{ ucwords(str_replace('_', ' ', $item)) }}
+                            </h3>
+                            <p class="text-4xl font-bold text-pink-600">
+                                @if ($item == 'sasaran_balita_perbulan')
+                                    {{ $posyandu->laporan->sasaran_balita_perbulan ?? '-' }}
+                                @elseif ($item == 'sasaran_ds_perbulan')
+                                    {{ $posyandu->laporan->sasaran_ds_perbulan ?? '-' }}
+                                @elseif ($item == 'sasaran_ibu_hamil')
+                                    {{ $posyandu->laporan->sasaran_ibu_hamil ?? '-' }}
+                                @elseif ($item == 'ibu_hamil_yang_dapat_pelayanan')
+                                    {{ $posyandu->laporan->ibu_hamil_yang_dapat_pelayanan ?? '-' }}
+                                @elseif ($item == 'sasaran_remaja')
+                                    {{ $posyandu->laporan->sasaran_remaja ?? '-' }}
+                                @elseif ($item == 'remaja_yang_dapat_pelayanan_kesehatan')
+                                    {{ $posyandu->laporan->remaja_yang_dapat_pelayanan_kesehatan ?? '-' }}
+                                @elseif ($item == 'sasaran_usia_produktif')
+                                    {{ $posyandu->laporan->sasaran_usia_produktif ?? '-' }}
+                                @elseif ($item == 'usia_produktif_yang_dapat_pelayanan_kesehatan')
+                                    {{ $posyandu->laporan->usia_produktif_yang_dapat_pelayanan_kesehatan ?? '-' }}
+                                @elseif ($item == 'sasaran_lansia')
+                                    {{ $posyandu->laporan->sasaran_lansia ?? '-' }}
+                                @elseif ($item == 'lansia_yang_dapat_pelayanan_kesehatan')
+                                    {{ $posyandu->laporan->lansia_yang_dapat_pelayanan_kesehatan ?? '-' }}
+                                @elseif ($item == 'jumlah_bayi_yang_di_imunisasi')
+                                    {{ $posyandu->laporan->jumlah_bayi_yang_di_imunisasi ?? '-' }}
+                                @elseif ($item == 'jumlah_kunjungan_rumah')
+                                    {{ $posyandu->laporan->jumlah_kunjungan_rumah ?? '-' }}
+                                @else
+                                    {{ '-' }}
+                                @endif
+                            </p>
+                        </div>
+                    @endforeach
                 </div>
-
-                <!-- Sasaran Balita -->
-                <div
-                    class="bg-pink-100 shadow-lg rounded-lg p-6 text-center hover:shadow-xl transition-shadow duration-300 ease-in-out">
-                    <h3 class="text-2xl font-semibold text-pink-800">Sasaran Balita</h3>
-                    <p class="text-4xl font-bold text-pink-600">150</p>
-                </div>
-
-                <!-- Sasaran Ibu Hamil -->
-                <div
-                    class="bg-pink-100 shadow-lg rounded-lg p-6 text-center hover:shadow-xl transition-shadow duration-300 ease-in-out">
-                    <h3 class="text-2xl font-semibold text-pink-800">Sasaran Ibu Hamil</h3>
-                    <p class="text-4xl font-bold text-pink-600">100</p>
-                </div>
-
-                <!-- Imunisasi Bayi -->
-                <div
-                    class="bg-pink-100 shadow-lg rounded-lg p-6 text-center hover:shadow-xl transition-shadow duration-300 ease-in-out">
-                    <h3 class="text-2xl font-semibold text-pink-800">Jumlah Bayi Imunisasi</h3>
-                    <p class="text-4xl font-bold text-pink-600">80</p>
-                </div>
-
-                <!-- Total Ibu Hamil Mendapat Pelayanan -->
-                <div
-                    class="bg-pink-100 shadow-lg rounded-lg p-6 text-center hover:shadow-xl transition-shadow duration-300 ease-in-out">
-                    <h3 class="text-2xl font-semibold text-pink-800">Ibu Hamil Dapat Pelayanan</h3>
-                    <p class="text-4xl font-bold text-pink-600">90</p>
-                </div>
-            </div>
+            @endforeach
         </div>
     </div>
 
@@ -449,27 +456,33 @@
                 </div>
                 <div class="flex space-x-4">
                     <a href="#" class="text-pink-600 hover:text-pink-800 transition duration-300">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12a9 9 0 0118 0 9 9 0 11-18 0z" />
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M3 12a9 9 0 0118 0 9 9 0 11-18 0z" />
                         </svg>
                     </a>
                     <a href="#" class="text-pink-600 hover:text-pink-800 transition duration-300">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12a9 9 0 0118 0 9 9 0 11-18 0z" />
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M3 12a9 9 0 0118 0 9 9 0 11-18 0z" />
                         </svg>
                     </a>
                     <a href="#" class="text-pink-600 hover:text-pink-800 transition duration-300">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12a9 9 0 0118 0 9 9 0 11-18 0z" />
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M3 12a9 9 0 0118 0 9 9 0 11-18 0z" />
                         </svg>
                     </a>
                 </div>
             </div>
-    
+
             <p class="text-xs text-gray-600">© {{ date('Y') }} MyPosyandu. All rights reserved.</p>
         </div>
-    
+
     </footer>
-    
+
 
 </x-dashboard.main>

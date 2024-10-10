@@ -16,6 +16,11 @@ class Posyandu extends Model
         'fasilitas',
     ];
 
+    public function laporan()
+    {
+        return $this->hasOne(Laporan::class, 'id_posyandu');
+    }
+    
     public function users()
     {
         return $this->belongsToMany(User::class, 'pengurus_posyandu', 'id_posyandu', 'id_user');

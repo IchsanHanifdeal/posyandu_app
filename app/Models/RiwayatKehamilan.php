@@ -15,7 +15,7 @@ class RiwayatKehamilan extends Model
         "tahun",
         "berat_lahir",
         "persalinan",
-        "penolong_kesehatan",
+        "penolong_persalinan",
         "komplikasi",
     ];
 }

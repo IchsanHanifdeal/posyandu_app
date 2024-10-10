@@ -22,6 +22,7 @@ class DatabaseSeeder extends Seeder
             IbuSeeder::class,
             PendampingSeeder::class,
             IdentitasAnakSeeder::class,
+            LaporanSeeder::class,
         ]);
     }
 }

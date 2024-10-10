@@ -13,6 +13,15 @@
                     Dashboard
                 </a>
             </li>
+            @if (Auth::user()->role === 'admin')
+                <li>
+                    <a href="{{ route('laporan') }}"
+                        class="{!! Request::path() == 'dashboard/laporan' ? 'active' : '' !!} flex items-center px-2.5 font-semibold">
+                        <x-lucide-clipboard />
+                        Laporan
+                    </a>
+                </li>
+            @endif
             @if (Auth::user()->role === 'super_admin')
                 <span class="label text-xs font-extrabold opacity-50">MAIN DATA</span>
                 <li>
@@ -35,16 +44,16 @@
                     <a href="{{ route('identitas_ibu_hamil') }}"
                         class="{!! preg_match('#^dashboard/identitas_ibu_hamil.*#', Request::path()) ? 'active' : '' !!} flex items-center px-2.5 font-semibold">
                         <x-lucide-user-check />
-                        Identitas Ibu Hamil
+                        Identitas Ibu
                     </a>
                 </li>
-                <li>
+                {{-- <li>
                     <a href="{{ route('pernyataan_pelayanan') }}"
                         class="{!! preg_match('#^dashboard/pernyataan.*#', Request::path()) ? 'active' : '' !!} flex items-center px-2.5 font-semibold">
                         <x-lucide-file-text />
                         Pernyataan Pelayanan Ibu
                     </a>
-                </li>
+                </li> --}}
                 <li>
                     <a href="{{ route('amanat_persalinan') }}"
                         class="{!! preg_match('#^dashboard/amanat.*#', Request::path()) ? 'active' : '' !!} flex items-center px-2.5 font-semibold">
@@ -59,27 +68,27 @@
                         Pelayanan Dokter
                     </a>
                 </li>
-                <li>
+                {{-- <li>
                     <a href="{{ route('pelayanan_kehamilan') }}"
                         class="{!! preg_match('#^dashboard/pelayanan_kehamilan.*#', Request::path()) ? 'active' : '' !!} flex items-center px-2.5 font-semibold">
                         <x-lucide-heart />
                         Pelayanan Kehamilan
                     </a>
-                </li>
-                <li>
+                </li> --}}
+                {{-- <li>
                     <a href="{{ route('pelayanan_nifas') }}"
                         class="{!! preg_match('#^dashboard/pelayanan_nifas.*#', Request::path()) ? 'active' : '' !!} flex items-center px-2.5 font-semibold">
                         <x-lucide-bed />
                         Pelayanan Nifas
                     </a>
-                </li>
-                <li>
+                </li> --}}
+                {{-- <li>
                     <a href="{{ route('rujukan') }}"
                         class="{!! preg_match('#^dashboard/rujukan.*#', Request::path()) ? 'active' : '' !!} flex items-center px-2.5 font-semibold">
                         <x-lucide-link />
                         Rujukan
                     </a>
-                </li>
+                </li> --}}
                 <span class="label text-xs font-extrabold opacity-50">INFORMASI IBU</span>
                 <li>
                     <a href="{{ route('ibu_hamil') }}"
@@ -138,13 +147,13 @@
                         Perkembangan Anak
                     </a>
                 </li>
-                <li>
+                {{-- <li>
                     <a href="{{ route('pelayanan_neonatus') }}"
                         class="{!! preg_match('#^dashboard/pelayanan_neonatus.*#', Request::path()) ? 'active' : '' !!} flex items-center px-2.5 font-semibold">
                         <x-lucide-baby />
                         Pelayanan Kesehatan Neonatus
                     </a>
-                </li>
+                </li> --}}
                 {{-- <li>
                     <a href="{{ route('sdidtk') }}"
                         class="{!! preg_match('#^dashboard/sdidtk.*#', Request::path()) ? 'active' : '' !!} flex items-center px-2.5 font-semibold">

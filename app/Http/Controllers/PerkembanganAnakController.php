@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\IdentitasAnak;
 use App\Models\PerkembanganAnak;
+use Illuminate\Support\Facades\Auth;
 
 class PerkembanganAnakController extends Controller
 {
@@ -15,12 +16,37 @@ class PerkembanganAnakController extends Controller
      */
     public function index()
     {
+        // Check if the authenticated user is a 'user'
+        if (Auth::user()->role === 'user') {
+            // Get the ibu associated with the logged-in user
+            $ibu = Auth::user()->ibu;
+
+            if ($ibu) {
+                // Get all anak associated with the ibu
+                $anaks = $ibu->identitas_anak;
+
+                // Get all pemeriksaan based on the ids of anak
+                $pemeriksaan = PerkembanganAnak::whereIn('id_anak', $anaks->pluck('id_anak'))->get();
+            } else {
+                // No ibu found, so set collections to empty
+                $anaks = collect();
+                $pemeriksaan = collect();
+            }
+        } else {
+            // For other roles, fetch all anak and pemeriksaan data
+            $anaks = IdentitasAnak::all();
+            $pemeriksaan = PerkembanganAnak::all();
+        }
+
+        // Return the view with necessary data
         return view('dashboard.perkembangan_anak', [
-            'pemeriksaan' => PerkembanganAnak::all(),
-            'users' => Ibu::all(),
-            'anaks' => IdentitasAnak::all(),
+            'pemeriksaan' => $pemeriksaan, // Display pemeriksaan anak data
+            'users' => Ibu::all(), // Get all ibu records for admin/other roles
+            'anaks' => $anaks, // Display anak data based on the role
+            'id_ibu' => Auth::user()->role === 'user' ? $ibu->id_ibu : null // Set id_ibu for user role
         ]);
     }
+
 
     /**
      * Show the form for creating a new resource.
@@ -103,8 +129,26 @@ class PerkembanganAnakController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(PerkembanganAnak $perkembanganAnak)
+    public function destroy($id)
     {
-        //
+        try {
+            // Temukan data perkembangan anak berdasarkan ID
+            $perkembanganAnak = PerkembanganAnak::findOrFail($id);
+
+            // Hapus data perkembangan anak
+            $perkembanganAnak->delete();
+
+            // Redirect dengan notifikasi toast sukses
+            return redirect()->back()->with('toast', [
+                'type' => 'success',
+                'message' => 'Data perkembangan anak berhasil dihapus!'
+            ]);
+        } catch (\Exception $e) {
+            // Jika terjadi kesalahan, redirect kembali dengan notifikasi toast error
+            return redirect()->back()->with('toast', [
+                'type' => 'error',
+                'message' => 'Terjadi kesalahan saat menghapus data perkembangan anak!'
+            ]);
+        }
     }
 }

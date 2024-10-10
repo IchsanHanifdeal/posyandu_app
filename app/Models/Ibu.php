@@ -10,7 +10,7 @@ class Ibu extends Model
     use HasFactory;
     protected $table = "ibu";
     protected $primaryKey = "id_ibu";
-    protected $fillable = ['id_user', 'nik', 'no_jkn', 'faskes_tk_1', 'faskes_rujukan', 'pembiayaan', 'golongan_darah', 'tempat_lahir', 'tanggal_lahir', 'pendidikan', 'pekerjaan', 'alamat', 'puskesmas_domisili', 'no_register_kohort'];
+    protected $fillable = ['id_user', 'nik', 'no_jkn', 'faskes_tk_1', 'faskes_rujukan', 'pembiayaan', 'golongan_darah', 'tempat_lahir', 'tanggal_lahir', 'pendidikan', 'pekerjaan', 'alamat', 'puskesmas_domisili', 'no_register_kohort', 'id_posyandu'];
 
     public function user()
     {
@@ -20,5 +20,9 @@ class Ibu extends Model
     public function pendamping()
     {
         return $this->hasOne(Pendamping::class, 'id_ibu', 'id_ibu');
+    }
+    public function identitas_anak()
+    {
+        return $this->hasMany(IdentitasAnak::class, 'id_ibu', 'id_ibu');
     }
 }
