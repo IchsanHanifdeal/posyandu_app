@@ -44,6 +44,7 @@
 
   <title>{{ $title ?? 'Login' }} | Posyandu</title>
   <meta name="description" content="....">
-  @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/schemas.js'])
   @vite('resources/css/app.css')
+  @vite('resources/js/app.js')
+  @vite('resources/js/schemas.js')
 </head>

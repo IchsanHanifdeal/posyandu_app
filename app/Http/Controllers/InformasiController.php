@@ -57,8 +57,38 @@ class InformasiController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function bayiBaruLahir()
     {
-        //
+        return view('dashboard.informasi_bayi_baru_lahir');
+    }
+
+    public function kondisiBalita()
+    {
+        return view('dashboard.informasi_kondisi_balita');
+    }
+
+    public function bayiAnakBalita624Bulan()
+    {
+        return view('dashboard.informasi_624bulan');
+    }
+
+    public function anakBalita23Tahun()
+    {
+        return view('dashboard.informasi_23tahun');
+    }
+
+    public function anakBalita34Tahun()
+    {
+        return view('dashboard.informasi_34tahun');
+    }
+
+    public function anakBalita45Tahun()
+    {
+        return view('dashboard.informasi_45tahun');
+    }
+
+    public function anak56Tahun()
+    {
+        return view('dashboard.informasi_informasi56tahun');
     }
 }
