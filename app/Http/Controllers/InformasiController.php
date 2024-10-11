@@ -89,6 +89,6 @@ class InformasiController extends Controller
 
     public function anak56Tahun()
     {
-        return view('dashboard.informasi_informasi56tahun');
+        return view('dashboard.informasi_56tahun');
     }
 }

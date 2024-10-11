@@ -1,7 +1,7 @@
 import './bootstrap';
 
 window.formatLabel = (label) => {
-    return label.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+    return label.toLowerCase().replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
 }
 
 window.loadFile = (url, cb) => {
@@ -149,5 +149,54 @@ window.extractDocxKeys = async (doc) => {
         original: () => _original,
         legal: () => _legal,
         label: () => _label
+    }
+}
+
+window.pdfToImg = async (url, id) => {
+    pdfjsLib.getDocument(url).promise.then(pdf => {
+        pdf.getPage(1).then(page => {
+            const scale = 1.5
+            const viewport = page.getViewport({ scale })
+            const canvas = document.getElementById(id)
+            const context = canvas.getContext('2d')
+            canvas.height = viewport.height
+            canvas.width = viewport.width
+            page.render({ canvasContext: context, viewport })
+        })
+    })
+}
+
+window.loadSurat = async ({ api, pdfUrl, container }) => {
+    var api = await fetch(api)
+    var res = await api.json()
+
+    for (let i = 0; i < res.lists.length; i++) {
+        const item = res.lists[i]
+        const title = formatLabel(item.split('.pdf')[0].replaceAll(/[_|-]/ig, ' '))
+        const pdfUri = pdfUrl + `/${item}`
+
+        await pdfToImg(pdfUri, `pdf-preview-` + i)
+
+        container.innerHTML += `
+        <tr>
+            <td class="text-center">${i + 1}</td>
+            <td class="text-center font-semibold">${title}</td>
+            <td class="text-center capitalize">
+            <label for="output_surat_${i}" class="w-full mx-auto btn btn-neutral flex items-center justify-center gap-2 text-white font-bold">
+                Lihat
+            </label>
+            <input type="checkbox" id="output_surat_${i}" class="modal-toggle" />
+            <div class="modal" role="dialog">
+                <div class="modal-box">
+                <h3 class="text-lg font-bold">${title}</h3>
+                <div class="flex flex-col w-full gap-3 !h-full mt-3 rounded-lg overflow-hidden">
+                    <canvas id="pdf-preview-${i}" class="border size-full"></canvas>
+                </div>
+                </div>
+                <label class="modal-backdrop" for="output_surat_${i}"></label>
+            </div>
+            </td>
+      </tr>
+    `
     }
 }

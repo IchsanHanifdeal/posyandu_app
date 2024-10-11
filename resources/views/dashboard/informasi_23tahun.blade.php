@@ -1,12 +1,12 @@
- <x-dashboard.main title="Informasi 6 - 24 Bulan">
-   @foreach (['Daftar_informasi_6_-_24_Bulan'] as $item)
+ <x-dashboard.main title="Informasi 2 - 3 Tahun">
+   @foreach (['Daftar_informasi_2_-_3_Tahun'] as $item)
      <div class="flex flex-col border-back rounded-xl w-full">
        <div class="p-5 sm:p-7 bg-white rounded-t-xl">
          <h1 class="flex items-start gap-3 font-semibold font-[onest] text-lg capitalize">
            {{ str_replace('_', ' ', $item) }}
          </h1>
          <p class="text-sm opacity-60">
-           Jelajahi dan ketahui Informasi seputar 6 - 24 Bulan.
+           Jelajahi dan ketahui Informasi seputar 2 - 3 Tahun.
          </p>
        </div>
        <div class="flex flex-col rounded-b-xl gap-3 divide-y pt-0 p-5 sm:p-7">
@@ -30,8 +30,8 @@
  <script async>
    const container = document.getElementById('output_surat')
    window.onload = async () => await loadSurat({
-     api: '/images/informasi/anak/kondisi_balita/data.json',
-     pdfUrl: '/images/informasi/anak/kondisi_balita',
+     api: '/images/informasi/anak/anak_23tahun/data.json',
+     pdfUrl: '/images/informasi/anak/anak_23tahun',
      container
    })
  </script>
