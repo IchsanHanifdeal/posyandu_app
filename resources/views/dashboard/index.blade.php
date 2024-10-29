@@ -68,6 +68,151 @@
                 </div>
             @endforeach
         </div>
+
+        <div class="my-8">
+            <div class="card bg-base-100 shadow-xl">
+                <div class="card-body">
+                    <h3 class="text-center font-bold text-lg text-red-600">Rekapitulasi Perbulan</h3>
+                    <div class="overflow-x-auto">
+                        <canvas id="monthlyChart" class="w-full h-96"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            // Data dari server
+            var months = {!! $months !!};
+            var dataMonthly = {!! $dataMonthly !!};
+
+            const monthlyCtx = document.getElementById('monthlyChart').getContext('2d');
+            const monthlyChart = new Chart(monthlyCtx, {
+                type: 'bar', // Mengubah tipe chart menjadi bar chart
+                data: {
+                    labels: months,
+                    datasets: [{
+                            label: 'Sasaran Balita',
+                            data: dataMonthly.sasaran_balita_perbulan,
+                            backgroundColor: 'rgba(75, 192, 192, 0.5)',
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            fill: false
+                        },
+                        {
+                            label: 'Sasaran DS',
+                            data: dataMonthly.sasaran_D_s_perbulan,
+                            backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                            borderColor: 'rgba(255, 99, 132, 1)',
+                            fill: false
+                        },
+                        {
+                            label: 'Sasaran Ibu Hamil',
+                            data: dataMonthly.sasaran_ibu_hamil,
+                            backgroundColor: 'rgba(153, 102, 255, 0.5)',
+                            borderColor: 'rgba(153, 102, 255, 1)',
+                            fill: false
+                        },
+                        {
+                            label: 'Ibu Hamil Dapat Pelayanan',
+                            data: dataMonthly.ibu_hamil_yang_dapat_pelayanan,
+                            backgroundColor: 'rgba(255, 206, 86, 0.5)',
+                            borderColor: 'rgba(255, 206, 86, 1)',
+                            fill: false
+                        },
+                        {
+                            label: 'Sasaran Remaja',
+                            data: dataMonthly.sasaran_remaja,
+                            backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                            borderColor: 'rgba(54, 162, 235, 1)',
+                            fill: false
+                        },
+                        {
+                            label: 'Remaja Dapat Pelayanan Kesehatan',
+                            data: dataMonthly.remaja_yang_dapat_pelayanan_kesehatan,
+                            backgroundColor: 'rgba(255, 159, 64, 0.5)',
+                            borderColor: 'rgba(255, 159, 64, 1)',
+                            fill: false
+                        },
+                        {
+                            label: 'Sasaran Usia Produktif',
+                            data: dataMonthly.sasaran_usia_produktif,
+                            backgroundColor: 'rgba(75, 192, 192, 0.5)',
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            fill: false
+                        },
+                        {
+                            label: 'Usia Produktif Dapat Pelayanan Kesehatan',
+                            data: dataMonthly.usia_produktif_yang_dapat_pelayanan_kesehatan,
+                            backgroundColor: 'rgba(153, 102, 255, 0.5)',
+                            borderColor: 'rgba(153, 102, 255, 1)',
+                            fill: false
+                        },
+                        {
+                            label: 'Sasaran Lansia',
+                            data: dataMonthly.sasaran_lansia,
+                            backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                            borderColor: 'rgba(54, 162, 235, 1)',
+                            fill: false
+                        },
+                        {
+                            label: 'Lansia Dapat Pelayanan Kesehatan',
+                            data: dataMonthly.lansia_yang_dapat_pelayanan_kesehatan,
+                            backgroundColor: 'rgba(255, 206, 86, 0.5)',
+                            borderColor: 'rgba(255, 206, 86, 1)',
+                            fill: false
+                        },
+                        {
+                            label: 'Jumlah Bayi Diimunisasi',
+                            data: dataMonthly.jumlah_bayi_yang_di_imunisasi,
+                            backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                            borderColor: 'rgba(255, 99, 132, 1)',
+                            fill: false
+                        },
+                        {
+                            label: 'Jumlah Kunjungan Rumah',
+                            data: dataMonthly.jumlah_kunjungan_rumah,
+                            backgroundColor: 'rgba(153, 102, 255, 0.5)',
+                            borderColor: 'rgba(153, 102, 255, 1)',
+                            fill: false
+                        }
+                    ]
+                },
+
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        tooltip: {
+                            enabled: true
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Jumlah'
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Bulan'
+                            }
+                        }
+                    }
+                },
+                plugins: [{
+                    id: 'scroll',
+                    beforeInit: function(chart) {
+                        chart.canvas.parentNode.style.overflowX = 'auto';
+                        chart.canvas.parentNode.style.whiteSpace = 'nowrap';
+                        chart.canvas.style.width = (months.length * 50) + 'px';
+                    }
+                }]
+            });
+        </script>
     @elseif (Auth::user()->role === 'user')
         <div class="grid grid-cols-1 md:grid-cols-1 gap-6">
             <!-- Ucapan Selamat -->

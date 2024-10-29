@@ -67,59 +67,52 @@ Route::get('/register', [AuthController::class, 'create'])->name('register');
 Route::post('/register/post', [AuthController::class, 'store'])->name('post.register');
 
 Route::middleware(['auth'])->group(function () {
+
+
     Route::get('/dashboard', function () {
         $user = Auth::user();
-
-        // Check if the user has the 'user' role
         $ibu = DB::table('ibu')->where('id_user', $user->id_user)->first();
 
         if ($user->role == 'user' && $ibu) {
-            // Get the first anak related to the ibu
             $anak = DB::table('identitas_anak')->where('id_ibu', $ibu->id_ibu)->first();
 
             if ($anak) {
-                // Retrieve all perkembangan records for the child
                 $perkembangan = DB::table('perkembangan_anak')
                     ->where('id_anak', $anak->id_anak)
-                    ->orderBy('pemeriksaan', 'desc') // Ensure we get the latest records
+                    ->orderBy('pemeriksaan', 'desc')
                     ->get();
 
-                // Pluck tinggi and berat badan for chart data
                 $perkembanganTinggiBadan = $perkembangan->pluck('tinggi_badan')->toArray();
                 $perkembanganBeratBadan = $perkembangan->pluck('berat_badan')->toArray();
                 $tanggalpemeriksaan = $perkembangan->pluck('pemeriksaan')->toArray();
 
-                // Get the latest tinggi and berat badan
-                $latestPerkembangan = $perkembangan->first(); // Get the latest record
-
-                // Extract the latest values or set to null if not available
+                $latestPerkembangan = $perkembangan->first();
                 $latestTinggiBadan = $latestPerkembangan ? $latestPerkembangan->tinggi_badan : null;
                 $latestBeratBadan = $latestPerkembangan ? $latestPerkembangan->berat_badan : null;
             } else {
-                // If no anak is found
                 $perkembanganTinggiBadan = [];
                 $perkembanganBeratBadan = [];
                 $latestTinggiBadan = null;
                 $latestBeratBadan = null;
             }
 
-            // Return the view with relevant data for 'user' role
             return view('dashboard.index', [
                 'nama_anak' => $anak->nama ?? null,
-                'tinggi_badan' => $latestTinggiBadan, // Latest tinggi badan
-                'berat_badan' => $latestBeratBadan, // Latest berat badan
-                'perkembanganTinggiBadan' => $perkembanganTinggiBadan, // All tinggi badan for charts
-                'perkembanganBeratBadan' => $perkembanganBeratBadan, // All berat badan for charts
-                'tanggalpemeriksaan' => $tanggalpemeriksaan, // All berat badan for charts
+                'tinggi_badan' => $latestTinggiBadan,
+                'berat_badan' => $latestBeratBadan,
+                'perkembanganTinggiBadan' => $perkembanganTinggiBadan,
+                'perkembanganBeratBadan' => $perkembanganBeratBadan,
+                'tanggalpemeriksaan' => $tanggalpemeriksaan,
             ]);
-        }
-        // Check if the user has the 'admin' role
-        else if ($user->role == 'admin') {
-            // Fetch average data for children from the database
+        } elseif ($user->role == 'admin') {
+            $idPosyanduAdmin = DB::table('pengurus_posyandu')
+                ->where('id_user', $user->id_user)
+                ->pluck('id_posyandu')
+                ->toArray();
+
             $averageData = DB::table('laporan')
+                ->whereIn('id_posyandu', $idPosyanduAdmin)
                 ->select(
-                    // DB::raw('AVG(rata_rata_tinggi_anak) as rata_rata_tinggi_anak'),
-                    // DB::raw('AVG(rata_rata_berat_anak) as rata_rata_berat_anak'),
                     DB::raw('SUM(sasaran_balita_perbulan) as sasaran_balita_perbulan'),
                     DB::raw('SUM(sasaran_ds_perbulan) as sasaran_D_s_perbulan'),
                     DB::raw('SUM(sasaran_ibu_hamil) as sasaran_ibu_hamil'),
@@ -135,10 +128,51 @@ Route::middleware(['auth'])->group(function () {
                 )
                 ->first();
 
-            // Return the view with average data for 'admin' role
+            $monthlyData = DB::table('laporan')
+                ->whereIn('id_posyandu', $idPosyanduAdmin)
+                ->select(
+                    DB::raw('MONTH(created_at) as month'),
+                    DB::raw('SUM(sasaran_balita_perbulan) as sasaran_balita_perbulan'),
+                    DB::raw('SUM(sasaran_ds_perbulan) as sasaran_D_s_perbulan'),
+                    DB::raw('SUM(sasaran_ibu_hamil) as sasaran_ibu_hamil'),
+                    DB::raw('SUM(ibu_hamil_yang_dapat_pelayanan) as ibu_hamil_yang_dapat_pelayanan'),
+                    DB::raw('SUM(sasaran_remaja) as sasaran_remaja'),
+                    DB::raw('SUM(remaja_yang_dapat_pelayanan_kesehatan) as remaja_yang_dapat_pelayanan_kesehatan'),
+                    DB::raw('SUM(sasaran_usia_produktif) as sasaran_usia_produktif'),
+                    DB::raw('SUM(usia_produktif_yang_dapat_pelayanan_kesehatan) as usia_produktif_yang_dapat_pelayanan_kesehatan'),
+                    DB::raw('SUM(sasaran_lansia) as sasaran_lansia'),
+                    DB::raw('SUM(lansia_yang_dapat_pelayanan_kesehatan) as lansia_yang_dapat_pelayanan_kesehatan'),
+                    DB::raw('SUM(jumlah_bayi_yang_di_imunisasi) as jumlah_bayi_yang_di_imunisasi'),
+                    DB::raw('SUM(jumlah_kunjungan_rumah) as jumlah_kunjungan_rumah')
+                )
+                ->groupBy('month')
+                ->orderBy('month')
+                ->get();
+
+            $months = [];
+            $dataMonthly = [
+                'sasaran_balita_perbulan' => [],
+                'sasaran_D_s_perbulan' => [],
+                'sasaran_ibu_hamil' => [],
+                'ibu_hamil_yang_dapat_pelayanan' => [],
+                'sasaran_remaja' => [],
+                'remaja_yang_dapat_pelayanan_kesehatan' => [],
+                'sasaran_usia_produktif' => [],
+                'usia_produktif_yang_dapat_pelayanan_kesehatan' => [],
+                'sasaran_lansia' => [],
+                'lansia_yang_dapat_pelayanan_kesehatan' => [],
+                'jumlah_bayi_yang_di_imunisasi' => [],
+                'jumlah_kunjungan_rumah' => []
+            ];
+
+            foreach ($monthlyData as $data) {
+                $months[] = date('F', mktime(0, 0, 0, $data->month, 1));
+                foreach ($dataMonthly as $key => &$values) {
+                    $values[] = $data->$key;
+                }
+            }
+
             return view('dashboard.index', [
-                // 'rata_rata_tinggi_anak' => $averageData->rata_rata_tinggi_anak,
-                // 'rata_rata_berat_anak' => $averageData->rata_rata_berat_anak,
                 'sasaran_balita_perbulan' => $averageData->sasaran_balita_perbulan,
                 'sasaran_D_s_perbulan' => $averageData->sasaran_D_s_perbulan,
                 'sasaran_ibu_hamil' => $averageData->sasaran_ibu_hamil,
@@ -151,9 +185,14 @@ Route::middleware(['auth'])->group(function () {
                 'lansia_yang_dapat_pelayanan_kesehatan' => $averageData->lansia_yang_dapat_pelayanan_kesehatan,
                 'jumlah_bayi_yang_di_imunisasi' => $averageData->jumlah_bayi_yang_di_imunisasi,
                 'jumlah_kunjungan_rumah' => $averageData->jumlah_kunjungan_rumah,
+                'months' => json_encode($months),
+                'dataMonthly' => json_encode($dataMonthly),
             ]);
+        } else {
+            return view('dashboard.index');
         }
     })->name('dashboard');
+
 
 
     Route::get('/dashboard/posyandu', [PosyanduController::class, 'index'])->name('posyandu');

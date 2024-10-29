@@ -16,35 +16,63 @@ class PerkembanganAnakController extends Controller
      */
     public function index()
     {
-        // Check if the authenticated user is a 'user'
         if (Auth::user()->role === 'user') {
-            // Get the ibu associated with the logged-in user
             $ibu = Auth::user()->ibu;
 
             if ($ibu) {
-                // Get all anak associated with the ibu
                 $anaks = $ibu->identitas_anak;
-
-                // Get all pemeriksaan based on the ids of anak
-                $pemeriksaan = PerkembanganAnak::whereIn('id_anak', $anaks->pluck('id_anak'))->get();
+                $pemeriksaan = PerkembanganAnak::whereIn('id_anak', $anaks->pluck('id_anak'))->orderBy('pemeriksaan', 'asc')->get();
             } else {
-                // No ibu found, so set collections to empty
                 $anaks = collect();
                 $pemeriksaan = collect();
             }
         } else {
-            // For other roles, fetch all anak and pemeriksaan data
             $anaks = IdentitasAnak::all();
-            $pemeriksaan = PerkembanganAnak::all();
+            $pemeriksaan = PerkembanganAnak::orderBy('pemeriksaan', 'asc')->get();
         }
 
-        // Return the view with necessary data
+        foreach ($anaks as $anak) {
+            $pemeriksaans = $pemeriksaan->where('id_anak', $anak->id_anak)->sortBy('pemeriksaan');
+            $previousData = null;
+
+            foreach ($pemeriksaans as $item) {
+                if ($previousData) {
+                    $item->status_gizi = $this->hitungStatusGizi($item, $previousData);
+                } else {
+                    $item->status_gizi = 'Gizi Normal (Normal)';
+                }
+
+                $previousData = $item;
+            }
+        }
+
         return view('dashboard.perkembangan_anak', [
-            'pemeriksaan' => $pemeriksaan, // Display pemeriksaan anak data
-            'users' => Ibu::all(), // Get all ibu records for admin/other roles
-            'anaks' => $anaks, // Display anak data based on the role
-            'id_ibu' => Auth::user()->role === 'user' ? $ibu->id_ibu : null // Set id_ibu for user role
+            'users' => Ibu::all(),
+            'anaks' => $anaks,
+            'pemeriksaan' => $pemeriksaan,
+            'id_ibu' => Auth::user()->role === 'user' ? $ibu->id_ibu : null
         ]);
+    }
+
+    protected function hitungStatusGizi($currentData, $previousData)
+    {
+        $baselineZScore = ((float)$previousData->berat_badan + (float)$previousData->tinggi_badan) / 2;
+        $currentZScore = ((float)$currentData->berat_badan + (float)$currentData->tinggi_badan) / 2;
+        $difference = $currentZScore - $baselineZScore;
+
+        if ($difference < -3) {
+            return 'Gizi Buruk (Severely Wasted)';
+        } elseif ($difference >= -3 && $difference < -2) {
+            return 'Kurang Gizi (Wasted)';
+        } elseif ($difference >= -2 && $difference <= 1) {
+            return 'Gizi Normal (Normal)';
+        } elseif ($difference > 1 && $difference <= 2) {
+            return 'Berisiko Obesitas (At Risk of Overweight)';
+        } elseif ($difference > 2) {
+            return 'Obesitas';
+        }
+
+        return 'Tidak Diketahui';
     }
 
 

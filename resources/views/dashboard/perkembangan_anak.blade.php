@@ -40,108 +40,18 @@
                             </thead>
                             <tbody class="capitalize">
                                 @foreach ($pemeriksaan as $i => $item)
-                                    @php
-                                        // Menghitung usia anak berdasarkan tanggal lahir
-                                        $usia_bulan = \Carbon\Carbon::parse($item->anak->tanggal)->diffInMonths(now());
-
-                                        // Data berat dan panjang lahir
-                                        $berat_lahir = $item->anak->berat; // Berat badan lahir
-                                        $panjang_lahir = $item->anak->panjang; // Panjang badan lahir
-
-                                        $berat_saat_ini = $item->berat_badan; // Berat badan saat pemeriksaan
-                                        $tinggi_saat_ini = $item->tinggi_badan; // Tinggi badan saat pemeriksaan
-
-                                        $status_gizi = 'Data tidak lengkap';
-
-                                        // Perhitungan status gizi berdasarkan BB/U (Berat Badan menurut Umur)
-                                        if ($usia_bulan <= 60 && $berat_saat_ini > 0 && $tinggi_saat_ini > 0) {
-                                            // Ensure non-zero values
-                                            // BB/U
-                                            if ($berat_saat_ini < -3) {
-                                                $status_gizi = 'Berat badan sangat kurang (Severely Underweight)';
-                                            } elseif ($berat_saat_ini >= -3 && $berat_saat_ini < -2) {
-                                                $status_gizi = 'Berat badan kurang (Underweight)';
-                                            } elseif ($berat_saat_ini >= -2 && $berat_saat_ini <= 1) {
-                                                $status_gizi = 'Berat badan normal (Normal)';
-                                            } elseif ($berat_saat_ini > 1 && $berat_saat_ini <= 2) {
-                                                $status_gizi = 'Risiko berat badan lebih (Possible Risk of Overweight)';
-                                            } else {
-                                                $status_gizi = 'Obesitas (Obese)';
-                                            }
-
-                                            // PB/U
-                                            if ($usia_bulan <= 24) {
-                                                if ($tinggi_saat_ini < -3) {
-                                                    $status_gizi = 'Sangat pendek (Severely Stunted)';
-                                                } elseif ($tinggi_saat_ini >= -3 && $tinggi_saat_ini < -2) {
-                                                    $status_gizi = 'Pendek (Stunted)';
-                                                } elseif ($tinggi_saat_ini >= -2 && $tinggi_saat_ini <= 3) {
-                                                    $status_gizi = 'Normal';
-                                                } elseif ($tinggi_saat_ini > 3) {
-                                                    $status_gizi = 'Tinggi (Tall)';
-                                                }
-                                            } else {
-                                                if ($tinggi_saat_ini < -3) {
-                                                    $status_gizi = 'Sangat pendek (Severely Stunted)';
-                                                } elseif ($tinggi_saat_ini >= -3 && $tinggi_saat_ini < -2) {
-                                                    $status_gizi = 'Pendek (Stunted)';
-                                                } elseif ($tinggi_saat_ini >= -2 && $tinggi_saat_ini <= 3) {
-                                                    $status_gizi = 'Normal';
-                                                } elseif ($tinggi_saat_ini > 3) {
-                                                    $status_gizi = 'Tinggi (Tall)';
-                                                }
-                                            }
-
-                                            // BB/TB
-                                            if ($tinggi_saat_ini > 0) {
-                                                $z_score_bb_tb = ($berat_saat_ini - $panjang_lahir) / $tinggi_saat_ini;
-
-                                                if ($z_score_bb_tb < -3) {
-                                                    $status_gizi = 'Gizi buruk (Severely Wasted)';
-                                                } elseif ($z_score_bb_tb >= -3 && $z_score_bb_tb < -2) {
-                                                    $status_gizi = 'Gizi kurang (Wasted)';
-                                                } elseif ($z_score_bb_tb >= -2 && $z_score_bb_tb <= 1) {
-                                                    $status_gizi = 'Gizi baik (Normal)';
-                                                } elseif ($z_score_bb_tb > 1 && $z_score_bb_tb <= 2) {
-                                                    $status_gizi = 'Berisiko gizi lebih (Possible Risk of Overweight)';
-                                                } else {
-                                                    $status_gizi = 'Gizi lebih (Overweight) atau Obesitas';
-                                                }
-                                            }
-
-                                            // IMT/U
-                                            $imt = $berat_saat_ini / ($tinggi_saat_ini / 100) ** 2; // Menghitung IMT
-
-                                            if ($imt < -3) {
-                                                $status_gizi = 'Gizi buruk (Severely Thinness)';
-                                            } elseif ($imt >= -3 && $imt < -2) {
-                                                $status_gizi = 'Gizi kurang (Thinness)';
-                                            } elseif ($imt >= -2 && $imt <= 1) {
-                                                $status_gizi = 'Gizi baik (Normal)';
-                                            } elseif ($imt > 1 && $imt <= 2) {
-                                                $status_gizi = 'Gizi lebih (Overweight)';
-                                            } else {
-                                                $status_gizi = 'Obesitas (Obese)';
-                                            }
-                                        } else {
-                                            // Jika usia anak lebih dari 60 bulan atau data tidak lengkap
-                                            $status_gizi =
-                                                'Z-Score tidak tersedia untuk usia > 60 bulan atau data tidak lengkap';
-                                        }
-                                    @endphp
-
                                     <tr>
                                         <th class="font-bold">{{ $i + 1 }}</th>
                                         <td class="font-semibold capitalize text-center">{{ $item->pemeriksaan }}</td>
                                         <td class="font-semibold capitalize text-center">{{ $item->anak->nama }}</td>
                                         <td class="font-semibold capitalize text-center">{{ $item->anak->tanggal }}</td>
-                                        <td class="font-semibold capitalize text-center">{{ $berat_lahir }}</td>
+                                        <td class="font-semibold capitalize text-center">{{ $item->anak->berat }}</td>
                                         <td class="font-semibold capitalize text-center">
                                             {{ $item->ibu->pendamping->nama ?? '-' }}</td>
                                         <td class="font-semibold capitalize text-center">{{ $item->ibu->user->nama }}
                                         </td>
-                                        <td class="font-semibold capitalize text-center">{{ $tinggi_saat_ini }}</td>
-                                        <td class="font-semibold capitalize text-center">{{ $berat_saat_ini }}</td>
+                                        <td class="font-semibold capitalize text-center">{{ $item->tinggi_badan }}</td>
+                                        <td class="font-semibold capitalize text-center">{{ $item->berat_badan }}</td>
                                         <td class="font-semibold capitalize text-center">
                                             {{ $item->pemberian_asi ?? '-' }}</td>
                                         <td class="font-semibold capitalize text-center">{{ $item->pelayanan ?? '-' }}
@@ -150,7 +60,7 @@
                                             {{ $item->pemberian_imunisasi ?? '-' }}</td>
                                         <td class="font-semibold capitalize text-center">{{ $item->catatan ?? '-' }}
                                         </td>
-                                        <td class="font-semibold capitalize text-center">{{ $status_gizi }}</td>
+                                        <td class="font-semibold capitalize text-center">{{ $item->status_gizi }}</td>
                                         <td class="flex items-center gap-4">
                                             <x-lucide-trash class="size-5 hover:stroke-red-500 cursor-pointer"
                                                 onclick="document.getElementById('hapus_modal_{{ $item->id }}').showModal();" />
@@ -208,13 +118,14 @@
                 <div class="modal-body">
                     <!-- Pertemuan Select Box -->
                     <div>
-                        <label for="id_ibu" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nama Ibu</label>
+                        <label for="id_ibu" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nama
+                            Ibu</label>
                         <select id="id_ibu" name="id_ibu"
                             class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                             {{ Auth::user()->role === 'user' ? 'readonly' : '' }}>
                             <option value="">Pilih Ibu</option>
                             @foreach ($users as $user)
-                                <option value="{{ $user->id_ibu }}" {{ ($user->id_ibu === $id_ibu) ? 'selected' : '' }}>
+                                <option value="{{ $user->id_ibu }}" {{ $user->id_ibu === $id_ibu ? 'selected' : '' }}>
                                     {{ $user->user->nama }}
                                 </option>
                             @endforeach
@@ -222,7 +133,7 @@
                         @error('id_ibu')
                             <p class="text-red-600 text-sm">{{ $message }}</p>
                         @enderror
-                    </div>                    
+                    </div>
                     <div>
                         <label for="id_anak" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nama
                             anak</label>
@@ -242,21 +153,50 @@
                         <div>
                             <label for="{{ $field }}"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white capitalize">{{ str_replace('_', ' ', $field) }}</label>
+
                             @if ($field == 'catatan')
                                 <textarea id="{{ $field }}" name="{{ $field }}"
                                     class="capitalize bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                     placeholder="masukan {{ $field }}..."></textarea>
+                            @elseif ($field == 'pemberian_imunisasi')
+                                <select id="{{ $field }}" name="{{ $field }}"
+                                    class="capitalize bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                    <option value="">Pilih Vaksin</option>
+                                    <option value="HB 0 (0-7 Hari)">HB 0 (0-7 Hari)</option>
+                                    <option value="BCG">BCG</option>
+                                    <option value="Polio 1">Polio 1</option>
+                                    <option value="DPT/HB 1">DPT/HB 1</option>
+                                    <option value="Polio 2">Polio 2</option>
+                                    <option value="DPT/HB 2">DPT/HB 2</option>
+                                    <option value="Polio 3">Polio 3</option>
+                                    <option value="DPT/HB 3">DPT/HB 3</option>
+                                    <option value="Polio 4">Polio 4</option>
+                                    <option value="Campak">Campak</option>
+                                </select>
+                            @elseif ($field == 'pemberian_asi')
+                                <select id="{{ $field }}" name="{{ $field }}"
+                                    class="capitalize bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                    <option value="">Pilih Status Pemberian ASI</option>
+                                    <option value="E0">E0</option>
+                                    <option value="E1">E1</option>
+                                    <option value="E2">E2</option>
+                                    <option value="E3">E3</option>
+                                    <option value="E4">E4</option>
+                                    <option value="E5">E5</option>
+                                </select>
                             @else
-                                <input type="{{ $field == 'pemeriksaan' ? 'date' : 'text' }}" id="{{ $field }}"
-                                    name="{{ $field }}"
+                                <input type="{{ $field == 'pemeriksaan' ? 'date' : 'text' }}"
+                                    id="{{ $field }}" name="{{ $field }}"
                                     class="capitalize bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                     placeholder="masukan {{ str_replace('_', ' ', $field) }}...">
                             @endif
+
                             @error($field)
                                 <p class="text-red-600 text-sm">{{ $message }}</p>
                             @enderror
                         </div>
                     @endforeach
+
                 </div>
                 <div class="modal-action">
                     <button type="button" onclick="document.getElementById('{{ $item }}_modal').close()"
